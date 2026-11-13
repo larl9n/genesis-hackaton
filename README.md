@@ -6,7 +6,7 @@
 
 ## Статус
 
-**Первый полный эпизод в режиме разработки.** Работают строгие схемы, чистая история, два независимо настраиваемых семейства ошибок, независимая проверка эталона, matching и награда, `reset/step`, пять инструментов, лимиты и JSONL-траектории. Добавлены 87 тестов. FX/cutoff, взаимодействующие сценарии, обычные базовые политики и процессная изоляция остаются следующими этапами.
+**Версия 0.2.0: четыре семейства и два взаимодействующих сценария.** Работают чистая история с FX-платежами, возвратами и корректными граничными случаями, причинные инъекции duplicate/allocation/FX/cutoff, независимая проверка эталона, matching/reward, `reset/step`, инструменты и траектории. Проходят 118 тестов. Обычные базовые политики, OS-изоляция, train/dev-наборы и полный пакет сдачи — следующие этапы.
 
 Каркас опубликован в `main`; [первый CI-прогон на Python 3.11](https://github.com/larl9n/genesis-hackaton/actions/runs/43464208929) завершился успешно.
 
@@ -68,21 +68,23 @@ artifacts/clean-example/
   private/  # truth.json с пустым issues; provenance.json с seed, конфигурацией и историей
 ```
 
-Clean-команды предназначены только для чистых данных. Для сценариев с ошибками и агентского контракта используйте команды ниже. Возвраты, мультивалютные проводки и sandbox ещё не реализованы. Раздельные папки не обеспечивают изоляцию процесса агента.
+Clean-команды предназначены только для чистых данных. История v0.2 допускает платежи в другой валюте с явной конвертацией в базовую валюту книги, обоснованные возвраты и документы до/после периода; сами проводки всегда выражены в базовой валюте. Счета в иностранной валюте и переоценка валютного остатка не моделируются. Раздельные папки не обеспечивают изоляцию процесса агента.
 
 ## Полный эпизод и оценка
 
 ```bash
-PYTHONPATH=src python -m genesis_fintech demo --seed 42 --config configs/scenario.json --output artifacts/demo-example
+PYTHONPATH=src python -m genesis_fintech demo --seed 42 --config configs/interactions.json --output artifacts/demo-example
 PYTHONPATH=src python -m genesis_fintech validate-scenario artifacts/demo-example
 ```
 
-Демонстрация создаёт компанию, запускает evaluator-only oracle через ограниченные действия среды и сохраняет `public/`, `private/`, `trajectories.jsonl`, `summary.json`. Oracle знает эталон и проверяет достижимость правильной оценки; его результат не измеряет способность агента. Для seed 42: TP=2, FP=0, FN=0, F1=1, 11 шагов, reward=0.98.
+Демонстрация создаёт компанию, запускает evaluator-only oracle через ограниченные действия среды и сохраняет `public/`, `private/`, `trajectories.jsonl`, `summary.json`. Oracle знает эталон и проверяет достижимость правильной оценки; его результат не измеряет способность агента. Для seed 42 и interactions.json: TP=4, FP=0, FN=0, F1=1, 12 шагов, reward=0.978.
+
+Конфиги: `clean.json` — прежний чистый пример, `scenario.json` — прежние два семейства (v0.1), `full.json` — четыре независимых семейства, `interactions.json` — четыре семейства с двумя взаимодействиями (v0.2). Старые конфиги принимаются без добавления новых ошибок; воспроизведение фиксирует также версию генератора.
 
 Для генерации без oracle используйте `generate-scenario` с теми же аргументами. Собственные находки оцениваются на стороне управляющего процесса:
 
 ```bash
-PYTHONPATH=src python -m genesis_fintech score artifacts/demo-example --findings findings.json --inspection-steps 10
+PYTHONPATH=src python -m genesis_fintech score artifacts/demo-example --findings findings.json --inspection-steps 11
 ```
 
 `findings.json` должен содержать `{episode_id, findings}` по [контракту](docs/ENVIRONMENT.md). `score` и `validate-scenario` читают private truth и не входят в набор инструментов политики.
@@ -107,13 +109,13 @@ src/genesis_fintech/
   cli.py          # генерация, валидация, score, demo, info и doctor
   contracts.py    # типы и Protocol для будущей реализации
   domain/         # строгие модели записей и Decimal-конвертация
-  generation/     # история, причинные инъекции двух типов, сохранение/чтение
+  generation/     # история, четыре инъекции и две композиции, сохранение/чтение
   environment/    # reset/step, ограниченные инструменты и калькулятор
   evaluation/     # независимые проверки, matcher, reward и oracle demo
   policies/       # политики с ограниченным доступом — запланировано
-configs/          # пример будущей конфигурации
+configs/          # чистые, независимые и взаимодействующие сценарии
 docs/             # архитектура, контракт, данные, проверки и этапы
-tests/            # 87 тестов и ручной пример для независимой проверки
+tests/            # 118 тестов, ручные случаи и regression-проверки
 .github/          # CI и шаблоны для GitHub
 ```
 
@@ -142,7 +144,7 @@ python -m json.tool configs/default.json
 PYTHONPATH=src python -m unittest discover -s tests -v
 ```
 
-`make check PYTHON=python` и CI выполняют весь набор: CLI, функциональные тесты, компиляцию и JSON-конфиги. Проверки охватывают чистые данные, два семейства ошибок, оценщик и development-эпизоды. Они не подтверждают готовность будущих FX/cutoff или OS-изоляции.
+`make check PYTHON=python` и CI выполняют весь набор: CLI, функциональные тесты, компиляцию и пять JSON-конфигов. Проверены четыре семейства, их 16 комбинаций, две композиции, независимые ручные случаи FX/cutoff и полный development-эпизод. OS-изоляция пока не реализована и этими тестами не подтверждается.
 
 ## Лицензия
 

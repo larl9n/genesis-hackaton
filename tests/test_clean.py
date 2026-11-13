@@ -90,6 +90,20 @@ class IndependentCheckerTests(unittest.TestCase):
                          if row.account == 'receivable')
         self.assertEqual(receivable, 4000)
 
+    def test_equal_amounts_on_distinct_invoices_are_not_duplicates(self):
+        fixture = Path(__file__).parent / 'fixtures/clean_minimal.json'
+        public = PublicEpisode.from_dict(json.loads(fixture.read_text()))
+        original = public.invoices[0]
+        invoice = replace(original, invoice_id='invoice_second', doc_id='doc_second')
+        rows = tuple(replace(row, row_id='row_second_' + str(i), invoice_id=invoice.invoice_id)
+                     for i, row in enumerate(public.ledger) if row.payment_id is None)
+        public = replace(public, invoices=public.invoices + (invoice,), ledger=public.ledger + rows,
+                         manifest=replace(public.manifest, row_count=8, document_count=4))
+        self.assertTrue(check_clean(public).ok)
+        from genesis_fintech.domain.findings import Truth
+        from genesis_fintech.evaluation.truth import validate_truth
+        validate_truth(public, Truth(public.manifest.episode_id, ()))
+
     def test_unknown_invoice_is_rejected_without_crashing(self):
         payment = self.public.payments[0]
         bad = replace(payment, invoice_refs=(replace(payment.invoice_refs[0], invoice_id='invoice_missing'),))
@@ -114,7 +128,7 @@ class IndependentCheckerTests(unittest.TestCase):
         invoice = replace(invoice, issued_at=self.public.manifest.period_end,
                           due_at='2026-12-01T00:00:00+05:00')
         public = replace(self.public, invoices=(invoice,) + self.public.invoices[1:])
-        self.assertIn('invoice recognition falls outside reporting period', check_clean(public).errors)
+        self.assertIn('ledger differs from postings reconstructed from documents', check_clean(public).errors)
 
     def test_no_silent_cross_currency_comparison(self):
         invoice = self.public.invoices[0]

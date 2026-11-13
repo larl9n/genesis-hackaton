@@ -1,0 +1,25 @@
+{
+  "config_version": "0.2",
+  "clean": {
+    "config_version": "0.2",
+    "invoice_count": 60,
+    "base_currency": "KZT",
+    "timezone": "Asia/Almaty",
+    "period_start": "2026-10-01T00:00:00+05:00",
+    "period_end": "2026-11-01T00:00:00+05:00",
+    "split_percent": 30,
+    "partial_percent": 25,
+    "foreign_payment_invoices": 12,
+    "foreign_currency": "USD",
+    "foreign_rate": "500.25",
+    "boundary_invoices": 4,
+    "refund_invoices": 4
+  },
+  "duplicate_invoices": 1,
+  "allocation_errors": 1,
+  "allocation_mode": "partial",
+  "fx_errors": 1,
+  "cutoff_errors": 1,
+  "fx_error_mode": "rate",
+  "interaction_scenarios": []
+}

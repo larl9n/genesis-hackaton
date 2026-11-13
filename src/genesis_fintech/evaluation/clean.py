@@ -3,7 +3,8 @@
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 
-from genesis_fintech.domain.models import PublicEpisode, timestamp
+from genesis_fintech.domain.models import DataError, PublicEpisode, timestamp
+from genesis_fintech.domain.fx import in_period, payment_value_minor
 
 
 @dataclass(frozen=True)
@@ -20,7 +21,7 @@ class CleanReport:
     def to_dict(self) -> dict:
         return {"ok": self.ok, "errors": list(self.errors), "ledger_rows": self.ledger_rows,
                 "invoices": self.invoices, "payments": self.payments,
-                "scope": "single-currency clean sales and allocated positive payments"}
+                "scope": "base-currency books, allocated payments/refunds, explicit FX and cutoff policy"}
 
 
 def check_clean(episode: PublicEpisode) -> CleanReport:
@@ -50,7 +51,11 @@ def check_clean(episode: PublicEpisode) -> CleanReport:
     if len(all_ids) != len(set(all_ids)):
         errors.append("IDs overlap across evidence namespaces")
     invoices = {i.invoice_id: i for i in episode.invoices}
+    for quote in episode.fx:
+        if quote.source_currency not in manifest.currency_exponents or quote.target_currency not in manifest.currency_exponents:
+            errors.append("FX quote uses a currency without a declared exponent")
     paid = defaultdict(int)
+    allocation_events = defaultdict(list)
     expected = Counter()
 
     def posting(at, account, debit, credit, entity, invoice_id, payment_id):
@@ -59,17 +64,17 @@ def check_clean(episode: PublicEpisode) -> CleanReport:
     for invoice in episode.invoices:
         if invoice.currency != base:
             errors.append("clean checker does not support cross-currency invoices")
-        if not start <= timestamp(invoice.issued_at) < end:
-            errors.append("invoice recognition falls outside reporting period")
-        expected[posting(invoice.issued_at, "receivable", invoice.total_minor, 0,
-                         invoice.entity_id, invoice.invoice_id, None)] += 1
-        expected[posting(invoice.issued_at, "revenue", 0, invoice.total_minor,
-                         invoice.entity_id, invoice.invoice_id, None)] += 1
+        if in_period(manifest, invoice.issued_at):
+            expected[posting(invoice.issued_at, "receivable", invoice.total_minor, 0,
+                             invoice.entity_id, invoice.invoice_id, None)] += 1
+            expected[posting(invoice.issued_at, "revenue", 0, invoice.total_minor,
+                             invoice.entity_id, invoice.invoice_id, None)] += 1
     for payment in episode.payments:
-        if payment.currency != base:
-            errors.append("clean checker does not support cross-currency payments")
-        if not start <= timestamp(payment.timestamp) < end:
-            errors.append("payment falls outside reporting period")
+        try:
+            value_minor = payment_value_minor(episode, payment)
+        except DataError as exc:
+            errors.append(str(exc))
+            continue
         if not payment.invoice_refs:
             errors.append("unallocated payment is outside the supported clean model")
             continue
@@ -81,25 +86,38 @@ def check_clean(episode: PublicEpisode) -> CleanReport:
                 errors.append("payment references unknown invoice")
                 continue
             entities.add(invoice.entity_id)
-            if allocation.currency != invoice.currency or allocation.currency != payment.currency:
+            if allocation.currency != invoice.currency or allocation.currency != base:
                 errors.append("allocation currency mismatch; conversion is not implicit")
                 continue
             if timestamp(payment.timestamp) < timestamp(invoice.issued_at):
                 errors.append("payment precedes invoice in the supported clean model")
             allocated += allocation.allocated_minor
             paid[invoice.invoice_id] += allocation.allocated_minor
-            expected[posting(payment.timestamp, "receivable", 0, allocation.allocated_minor,
-                             invoice.entity_id, invoice.invoice_id, payment.payment_id)] += 1
-        if allocated != payment.amount_minor:
+            allocation_events[invoice.invoice_id].append((timestamp(payment.timestamp), allocation.allocated_minor))
+            if in_period(manifest, payment.timestamp):
+                expected[posting(payment.timestamp, "receivable", max(-allocation.allocated_minor, 0), max(allocation.allocated_minor, 0),
+                                 invoice.entity_id, invoice.invoice_id, payment.payment_id)] += 1
+        if allocated != value_minor:
             errors.append("payment amount differs from allocations")
         if len(entities) != 1:
             errors.append("payment must belong to one known entity in the clean model")
-        else:
-            expected[posting(payment.timestamp, "bank", payment.amount_minor, 0,
+        elif in_period(manifest, payment.timestamp):
+            expected[posting(payment.timestamp, "bank", max(value_minor, 0), max(-value_minor, 0),
                              next(iter(entities)), None, payment.payment_id)] += 1
     for invoice_id, total_paid in paid.items():
         if total_paid > invoices[invoice_id].total_minor:
             errors.append("invoice is overallocated")
+    for invoice_id, events in allocation_events.items():
+        grouped = defaultdict(int)
+        for at, amount in events:
+            grouped[at] += amount
+        balance = 0
+        for at in sorted(grouped):
+            balance += grouped[at]
+            if balance < 0:
+                errors.append("refund exceeds prior allocations")
+            if balance > invoices[invoice_id].total_minor:
+                errors.append("invoice is overallocated")
     actual = Counter()
     balances = defaultdict(int)
     for row in episode.ledger:

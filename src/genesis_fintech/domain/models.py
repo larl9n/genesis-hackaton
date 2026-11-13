@@ -6,7 +6,7 @@ import re
 from typing import Any
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-SCHEMA_VERSION = "0.1"
+SCHEMA_VERSION = "0.2"
 MAX_MINOR = 10**15
 ACCOUNTS = {"receivable", "revenue", "bank"}
 ROUNDINGS = {"ROUND_HALF_EVEN", "ROUND_HALF_UP"}
@@ -102,7 +102,7 @@ class Manifest(Record):
     rounding: str
 
     def __post_init__(self):
-        if self.schema_version != SCHEMA_VERSION:
+        if self.schema_version not in ("0.1", SCHEMA_VERSION):
             raise DataError("schema_version: unsupported")
         identifier(self.episode_id, "episode_id")
         currency(self.base_currency)
@@ -219,7 +219,9 @@ class Allocation(Record):
 
     def __post_init__(self):
         identifier(self.invoice_id, "invoice_id")
-        integer(self.allocated_minor, "allocated_minor", 1)
+        integer(self.allocated_minor, "allocated_minor")
+        if self.allocated_minor == 0:
+            raise DataError("allocated_minor: must be nonzero")
         currency(self.currency)
 
 
@@ -237,12 +239,16 @@ class Payment(Record):
         identifier(self.payment_id, "payment_id")
         timestamp(self.timestamp)
         currency(self.currency)
-        integer(self.amount_minor, "amount_minor", 1)
+        integer(self.amount_minor, "amount_minor")
+        if self.amount_minor == 0:
+            raise DataError("amount_minor: must be nonzero")
         if len(self.invoice_refs) > 100 or not all(type(x) is Allocation for x in self.invoice_refs):
             raise DataError("invoice_refs: invalid allocations")
         ids = [x.invoice_id for x in self.invoice_refs]
         if len(ids) != len(set(ids)):
             raise DataError("invoice_refs: duplicate invoice ID")
+        if any((x.allocated_minor > 0) != (self.amount_minor > 0) for x in self.invoice_refs):
+            raise DataError("invoice_refs: allocation sign must match payment or refund")
 
     @classmethod
     def from_dict(cls, data):
@@ -281,6 +287,10 @@ class PublicEpisode(Record):
     invoices: tuple[Invoice, ...]
     payments: tuple[Payment, ...]
     fx: tuple[FxRate, ...]
+
+    def __post_init__(self):
+        if self.manifest.schema_version == "0.1" and any(p.amount_minor < 0 for p in self.payments):
+            raise DataError("refund records require public schema_version 0.2")
 
     @classmethod
     def from_dict(cls, data):

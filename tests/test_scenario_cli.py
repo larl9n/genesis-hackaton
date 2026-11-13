@@ -58,6 +58,19 @@ class ScenarioCliTests(unittest.TestCase):
             checked = self.run_cli('validate-scenario', path)
             self.assertEqual(json.loads(checked.stdout), {'ok': True, 'issues': 2})
 
+    def test_full_composed_demo_retrieves_fx_evidence_without_tool_errors(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / 'demo'
+            run = self.run_cli('demo', '--seed', '42', '--config', 'configs/interactions.json', '--output', str(output))
+            self.assertEqual(run.returncode, 0, run.stderr + run.stdout)
+            report = json.loads(run.stdout)
+            self.assertEqual(report['metrics']['tp'], 4)
+            self.assertEqual(len(report['issue_families']), 4)
+            trace = [json.loads(line) for line in (output / 'trajectories.jsonl').read_text().splitlines()]
+            self.assertTrue(any(item['action']['params'].get('table') == 'fx' for item in trace))
+            self.assertTrue(all('error' not in item['observation'] for item in trace))
+            self.assertAlmostEqual(report['metrics']['reward'], 1 - 0.002 * (len(trace) - 1))
+
 
 if __name__ == '__main__':
     unittest.main()

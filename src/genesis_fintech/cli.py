@@ -10,7 +10,7 @@ from . import __version__
 def main() -> int:
     parser = argparse.ArgumentParser(
         prog="genesis-fintech",
-        description="Synthetic audit environment: clean data, two error families, grading and development episodes.",
+        description="Synthetic audit environment: four error families, interactions, grading and development episodes.",
     )
     parser.add_argument("--version", action="version", version=__version__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -23,7 +23,7 @@ def main() -> int:
     generate.add_argument("--invoices", type=int, help="Override invoice_count (1..60)")
     validate = commands.add_parser("validate-clean", help="Independently validate a public clean-data directory")
     validate.add_argument("public_directory")
-    for name, description in [("generate-scenario", "Generate a validated company with two configurable error families"),
+    for name, description in [("generate-scenario", "Generate a validated company with configurable error families"),
                               ("demo", "Run an evaluator-only oracle through the development environment")]:
         command = commands.add_parser(name, help=description)
         command.add_argument("--seed", type=int, required=True)
@@ -100,11 +100,12 @@ def main() -> int:
     print(json.dumps({
         "project": "genesis-fintech-env",
         "version": __version__,
-        "status": "development_episode_two_families",
+        "status": "development_episode_four_families",
         "implemented": ["project_info", "python_version_check", "interface_protocols", "public_record_validation",
                         "decimal_conversion", "clean_generation", "public_private_export", "independent_clean_checker",
-                        "two_error_families", "truth_validation", "reward_matching", "development_reset_step", "oracle_demo"],
-        "planned": ["fx_and_cutoff_errors", "interaction_scenarios", "baseline_policies", "process_isolation"],
+                        "four_error_families", "fx_payment_history", "boundary_decoys", "interaction_scenarios",
+                        "truth_validation", "reward_matching", "development_reset_step", "oracle_demo"],
+        "planned": ["baseline_policies", "process_isolation", "datasets_and_failure_analysis"],
         "end_to_end_available": True,
         "security_mode": "development_in_process",
     }, indent=2))

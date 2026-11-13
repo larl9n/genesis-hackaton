@@ -141,10 +141,15 @@ class AuditEnv:
                 inspection_counted = True
                 observation = {"result": self._tool(name, params)}
         except DataError:
-            if not inspection_counted:
-                self._inspections += 1
-            # Never return incoming IDs, internal paths, scorer diagnostics or stack traces.
-            observation = {"error": "invalid_request"}
+            if was_submit:
+                self._finish(None, self._inspections)
+                terminated = True
+                observation = {"result": {"submitted": True}}
+            else:
+                if not inspection_counted:
+                    self._inspections += 1
+                # Never return incoming IDs, internal paths, scorer diagnostics or stack traces.
+                observation = {"error": "invalid_request"}
         if self._active and (self._steps >= self.max_steps or self._clock() >= self._deadline):
             self._truncate()
             terminated, truncated = False, True

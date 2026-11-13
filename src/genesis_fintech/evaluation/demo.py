@@ -15,18 +15,24 @@ def run_demo(seed: int, config: ScenarioConfig, output: Path) -> dict:
     env = AuditEnv(mode="train")
     env.reset(seed, config.to_dict())
     documents = {record.doc_id for record in (*generated.public.invoices, *generated.public.payments)}
+    record_tables = {record.row_id: 'ledger' for record in generated.public.ledger}
+    record_tables.update({record.evidence_id: 'fx' for record in generated.public.fx})
     requested = sorted({identifier for issue in generated.truth.issues
                         for identifier in issue.acceptable_evidence_sets[0]})
     for identifier in requested:
         action = ({"action": "get_document", "params": {"doc_id": identifier}} if identifier in documents
-                  else {"action": "get_record", "params": {"table": "ledger", "id": identifier}})
-        _, _, terminated, truncated, _ = env.step(action)
+                  else {"action": "get_record", "params": {"table": record_tables[identifier], "id": identifier}})
+        observation, _, terminated, truncated, _ = env.step(action)
+        if 'error' in observation:
+            from genesis_fintech.domain.models import DataError
+            raise DataError('oracle could not retrieve its declared observable evidence')
         if terminated or truncated:
             break
     else:
         env.step({"action": "submit", "params": oracle_submission(generated.truth)})
     summary = {"policy": "evaluator_oracle", "security_mode": "development_in_process",
-               "scope": "duplicate invoices and payment allocation", "steps": len(env.trajectory),
+               "scope": "four configurable financial error families", "steps": len(env.trajectory),
+               "issue_families": sorted({issue.type for issue in generated.truth.issues}),
                "metrics": env.evaluation_result()}
     with (output / "trajectories.jsonl").open("x", encoding="utf-8") as file:
         for item in env.trajectory:
