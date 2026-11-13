@@ -1,0 +1,31 @@
+# Python and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local credentials and machine files
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea/
+.vscode/
+
+# Generated episodes, private truth, trajectories and reports
+/artifacts/
+/data/generated/
+/data/private/
+/reports/
+/trajectories.jsonl
+
+# Local conversation archive; project context is tracked separately
+/docs/CHAT_HISTORY.md

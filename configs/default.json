@@ -1,0 +1,21 @@
+{
+  "config_version": "0.1",
+  "schema_version": "0.1",
+  "mode": "train",
+  "base_currency": "KZT",
+  "timezone": "Asia/Almaty",
+  "max_steps": 100,
+  "max_page_size": 50,
+  "wall_time_seconds": 60,
+  "scenario": {
+    "ledger_rows": 200,
+    "supporting_documents": 40,
+    "issue_count": 4,
+    "enabled_error_families": [
+      "duplicate_invoice",
+      "payment_allocation",
+      "fx_mismatch",
+      "period_cutoff"
+    ]
+  }
+}
