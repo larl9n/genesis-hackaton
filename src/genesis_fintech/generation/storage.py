@@ -116,6 +116,27 @@ def write_clean(generated: GeneratedEpisode, directory: Path) -> None:
     report = check_clean(public)
     if not report.ok or generated.provenance.get("changes") != []:
         raise DataError("refusing to export records that do not pass clean validation")
+    _write_episode(public, {"episode_id": public.manifest.episode_id, "issues": []},
+                   generated.provenance, directory)
+
+
+def write_scenario(generated, directory: Path) -> None:
+    from genesis_fintech.evaluation.truth import validate_truth
+    validate_truth(generated.public, generated.truth)
+    _write_episode(generated.public, generated.truth.to_dict(), generated.provenance, directory)
+
+
+def load_scenario(directory: Path):
+    from genesis_fintech.domain.findings import Truth
+    from genesis_fintech.evaluation.truth import validate_truth
+    directory = Path(directory)
+    public = load_public(directory / "public")
+    truth = Truth.from_dict(read_json(directory / "private" / "truth.json"))
+    validate_truth(public, truth)
+    return public, truth
+
+
+def _write_episode(public, truth, provenance, directory):
     # Serialize and validate before reserving the output folder.
     files = {
         "public/manifest.json": json_text(public.manifest.to_dict()),
@@ -126,8 +147,8 @@ def write_clean(generated: GeneratedEpisode, directory: Path) -> None:
         "public/payments.jsonl": "".join(json.dumps(p.to_dict(), ensure_ascii=False, sort_keys=True,
                                                     allow_nan=False) + "\n" for p in public.payments),
         "public/fx.csv": _csv_text(public.fx, FxRate),
-        "private/truth.json": json_text({"episode_id": public.manifest.episode_id, "issues": []}),
-        "private/provenance.json": json_text(generated.provenance),
+        "private/truth.json": json_text(truth),
+        "private/provenance.json": json_text(provenance),
     }
     directory = Path(directory)
     directory.parent.mkdir(parents=True, exist_ok=True)

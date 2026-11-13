@@ -1,1 +1,1 @@
-"""Reserved for episode state, bounded public tools and the agent bridge."""
+"""Development episode state and bounded public tools; OS isolation is pending."""

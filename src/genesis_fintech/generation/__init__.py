@@ -1,1 +1,1 @@
-"""Reserved for latent history, document derivation and recorded error injection."""
+"""Consistent latent history, document derivation and recorded error injection."""

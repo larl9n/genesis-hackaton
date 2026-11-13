@@ -15,3 +15,4 @@ check: doctor info test
 	$(PYTHON) -m compileall -q src
 	$(PYTHON) -m json.tool configs/default.json > /dev/null
 	$(PYTHON) -m json.tool configs/clean.json > /dev/null
+	$(PYTHON) -m json.tool configs/scenario.json > /dev/null

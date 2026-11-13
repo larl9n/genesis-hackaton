@@ -1,1 +1,1 @@
-"""Reserved for validated records, findings, money and FX arithmetic."""
+"""Validated public records, private truth, findings and bounded money arithmetic."""

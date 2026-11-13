@@ -1,1 +1,1 @@
-"""Reserved for private truth validation, evidence matching, rewards and reports."""
+"""Independent truth validation, evidence matching, rewards and host-only reports."""

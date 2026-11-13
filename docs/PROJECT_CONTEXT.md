@@ -20,6 +20,7 @@
 5. GitHub-плагин подключён как `larl9n`. Чтение и запись подтверждены фактической публикацией README и каркаса в `larl9n/genesis-hackaton`. GitHub назначил авторство подключённого аккаунта; вымышленные Git-данные не использовались. Сеть терминала работает; `git fetch origin` успешно получен. Отдельная терминальная авторизация для push пока не проверена, `gh` при последней проверке отсутствовал.
 6. После восстановления сети пользователь попросил «продолжай работу». Продолжен текущий этап: публикация каркаса, синхронизация локальной main и проверка CI. Полная предметная реализация пока не выполнялась.
 7. Затем пользователь разрешил техническую реализацию по этапам и потребовал проверять правильность и функциональность после каждого этапа. Реализованы первые три технических блока: публичные модели/деньги; чистая история/независимый checker; файловый обмен/CLI. После них проходят 42 теста. Распределение задач между людьми по-прежнему не требуется.
+8. Пользователь подтвердил: если всё исправно, продолжать дальше. Реализованы два семейства причинных ошибок, строгие truth/findings, независимая верификация эталона, matching/reward, development reset/step и oracle demo. После каждого блока запускались тесты; общий набор — 87. Детали текущего состояния ниже; старые записи про 42 теста относятся к предыдущему этапу.
 
 ## Что требуется от конечного проекта
 
@@ -53,10 +54,16 @@
 - Строгие публичные модели и Decimal-конвертация: `domain/models.py`, `domain/money.py`.
 - `generation/clean.py` сначала формирует историю компании, затем документы и проводки. Одна валюта на компанию; поддержаны полные, частичные и разбитые положительные платежи. По умолчанию 50 счетов.
 - `evaluation/clean.py` независимо восстанавливает ожидаемые проводки из открытых счетов и платежей. Не читает provenance и не импортирует генератор.
-- `generation/storage.py` сохраняет 6 public-файлов отдельно от private truth/provenance; loader читает только public. Это разделение файлов, а не OS-sandbox.
-- Команды: `generate-clean --seed 42 --config configs/clean.json --output <новая папка>` и `validate-clean <папка/public>`. `info` показывает статус clean_data_milestone и end_to_end_available=false.
-- `configs/clean.json` — работающий строго проверяемый конфиг; `configs/default.json` — будущий конфиг с ошибками, пока не принимается генератором.
-- Внесение ошибок, runtime-схемы findings/truth с ошибками, reset/step, reward matcher, политики и процессная изоляция пока отсутствуют. Возвраты и FX-проводки не поддержаны clean checker.
+- `generation/storage.py` сохраняет public отдельно от private truth/provenance. load_public читает только открытые файлы; load_scenario — supervisor-only, читает и независимо проверяет truth. Это не OS-sandbox.
+- `generation/scenario.py` вносит duplicate_invoice и payment_allocation на разных счетах. Counts 0..12 независимо настраиваются, суммарно не более 12. Режим allocation_mode partial/missing. Перед инъекцией проверяется чистая история, before/after фиксируются в provenance.
+- `domain/findings.py` задаёт строгие Truth/Issue/Submission/Finding. `evaluation/truth.py` не импортирует инжектор и подтверждает каждую ошибку и evidence по public; после логического исправления должна получаться чистая книга.
+- `evaluation/scoring.py`: максимум matching один к одному, TP/FP/FN/F1, общая награда и стоимость inspection steps. Полная evaluate_submission сначала верифицирует truth; внутренний score_submission предполагает уже проверенный эталон.
+- `environment/core.py`: AuditEnv reset/step, list_records/get_record/get_document/calculator/submit, до 100 шагов и 60 секунд, 50 записей на странице, stable table cursors, ограниченные ошибки и копии наблюдений. evaluation возвращает reward=0 и пустой info, host получает score через evaluation_result после завершения. Это один процесс; недоверенной политике нельзя передавать сам env.
+- `environment/calculator.py`: bounded AST + Decimal, нет eval/вызовов/файлов, лимиты 256 chars/64 nodes/12 depth/числа. Входное JSON-действие ограничено 512 KiB; невалидные запросы логируются ограниченно.
+- CLI: generate-clean, validate-clean, generate-scenario, validate-scenario, score, demo, doctor, info. `info`: development_episode_two_families, end_to_end_available=true, security_mode=development_in_process.
+- `configs/clean.json` и `configs/scenario.json` — работающие строгие конфиги; `configs/default.json` остаётся проектом будущего полного формата, не принимается этими генераторами.
+- `evaluation/demo.py` — evaluator-only oracle. Он использует truth только на стороне хозяина, запрашивает evidence через разрешённые действия и отправляет правильные findings. Это ceiling/integration test, а не доказательство качества агента.
+- FX/cutoff, взаимодействующие сценарии, обычные random/reconciliation/flag-all политики, process/container isolation, train/dev-наборы и полная упаковка пока не реализованы. Возвраты и FX-проводки не поддержаны clean checker.
 - Лицензия не выбрана. Lockfile пока нет; build-зависимость задана диапазоном.
 
 ## Проверки и ограничения окружения
@@ -67,7 +74,9 @@
 - `doctor` корректно возвращает ошибку на 3.9.6. На локальном Python 3.11.18 команда `make check PYTHON=.venv/bin/python` прошла: doctor, info, компиляция и синтаксис JSON-конфига.
 - Пакет успешно установлен через `.venv/bin/python -m pip install -e .`; console entry point `.venv/bin/genesis-fintech doctor` и `--version` работают. `pip check` не обнаружил конфликтов зависимостей.
 - После технической реализации `make check PYTHON=.venv/bin/python` выполняет 42 теста, компиляцию и оба JSON-конфига. Проверены 50 seed, ручной пример, сбалансированный дубль, некорректные данные, файловый round-trip, public/private и CLI. Подробности: docs/CHECKPOINTS.md.
+- После следующих этапов та же команда выполняет 87 тестов и три конфига. Проверены инъекции на 50 seed, повторное применение provenance, matching/FP/abstention/flag-all, ID/order-инвариантность, безопасный калькулятор, budget/time limits, закрытая награда evaluation, полный demo и повторный score траектории.
 - Реальный локальный запуск seed 42 в `artifacts/checkpoint-clean-2026-11-13`: 50 счетов, 66 платежей, 232 проводки. Генерация и повторная независимая проверка с диска дали ok=true. Артефакты игнорируются Git.
+- Реальный demo seed 42 в `artifacts/checkpoint-episode-2026-11-13`: 2 ошибки, TP=2, FP=0, FN=0, F1=1, 11 действий, inspection_steps=10, reward=0.98. Сохранены public/private, trajectories.jsonl и summary.json. Oracle — не обычный агент. Локальные артефакты не публикуются.
 - Проверены синтаксис JSON, TOML-метаданные, локальные Markdown-ссылки и окончания строк.
 - GitHub Actions на Python 3.11 прошёл для коммита каркаса `0ec8196`: https://github.com/larl9n/genesis-hackaton/actions/runs/43464208929 . Это CLI, компиляция и JSON-конфигурация, а не проверка ещё не реализованной предметной логики.
 - Первоначальная DNS-ошибка исправлена включением сети. Терминал читает GitHub; `origin/main` существует. Запись через плагин подтверждена, обычный терминальный push пока не проверен.
@@ -90,4 +99,4 @@ codex resume 01a1d536-8ebb-7251-9871-1d3b095ddd0b -C /Users/zhopa/genesis-fintec
 
 ## Следующее возможное действие
 
-Следующий этап — причинные инъекции дубликатов и ошибок распределения платежей, строгие схемы truth/findings, канонизация affected IDs и достаточные evidence sets; затем matcher/scorer и reset/step. Перед переходом дальше запускать проверки каждого блока и общий набор. README и каркас уже опубликованы; не повторять начальную публикацию. GitHub-плагин и сеть работают. При новых публикациях сохранять удалённую историю и проверять результат, не требовать повторного подключения плагина.
+Следующий этап — корректная модель FX и cutoff, две дополнительные независимо настраиваемые инъекции и их независимые доказательства; затем два взаимодействующих сценария, обычные baselines и OS-изоляция. Два первых семейства, matcher/scorer и development reset/step уже реализованы: не начинать их заново. Перед переходом дальше запускать проверки каждого блока и общий набор. GitHub-плагин и сеть работают; при публикации сохранять удалённую историю и проверять результат. Не выдавать development demo за защищённую оценку или улучшение обученной модели.
