@@ -1,0 +1,56 @@
+{
+  "manifest": {
+    "schema_version": "0.1",
+    "episode_id": "episode_manual",
+    "base_currency": "KZT",
+    "currency_exponents": {"KZT": 2},
+    "period_start": "2026-10-01T00:00:00+05:00",
+    "period_end": "2026-11-01T00:00:00+05:00",
+    "timezone": "Asia/Almaty",
+    "row_count": 6,
+    "document_count": 3,
+    "amount_tolerance_minor": 0,
+    "rounding": "ROUND_HALF_EVEN"
+  },
+  "policy": {
+    "period_boundary": "[start,end)",
+    "invoice_recognition": "issued_at",
+    "fx_date": "payment_date",
+    "rounding": "ROUND_HALF_EVEN"
+  },
+  "invoices": [{
+    "doc_id": "doc_invoice", "invoice_id": "invoice_manual", "entity_id": "entity_manual",
+    "issued_at": "2026-10-02T10:00:00+05:00", "due_at": "2026-10-31T10:00:00+05:00",
+    "currency": "KZT", "total_minor": 10000,
+    "line_items": [{"description": "Hand-authored synthetic example", "quantity": 2, "unit_price_minor": 5000}]
+  }],
+  "payments": [
+    {"doc_id": "doc_payment_a", "payment_id": "payment_a", "timestamp": "2026-10-03T10:00:00+05:00",
+      "currency": "KZT", "amount_minor": 2500,
+      "invoice_refs": [{"invoice_id": "invoice_manual", "allocated_minor": 2500, "currency": "KZT"}]},
+    {"doc_id": "doc_payment_b", "payment_id": "payment_b", "timestamp": "2026-10-04T10:00:00+05:00",
+      "currency": "KZT", "amount_minor": 3500,
+      "invoice_refs": [{"invoice_id": "invoice_manual", "allocated_minor": 3500, "currency": "KZT"}]}
+  ],
+  "ledger": [
+    {"row_id": "row_sale_ar", "timestamp": "2026-10-02T10:00:00+05:00", "account": "receivable",
+      "debit_minor": 10000, "credit_minor": 0, "currency": "KZT", "entity_id": "entity_manual",
+      "invoice_id": "invoice_manual", "payment_id": null},
+    {"row_id": "row_sale_revenue", "timestamp": "2026-10-02T10:00:00+05:00", "account": "revenue",
+      "debit_minor": 0, "credit_minor": 10000, "currency": "KZT", "entity_id": "entity_manual",
+      "invoice_id": "invoice_manual", "payment_id": null},
+    {"row_id": "row_bank_a", "timestamp": "2026-10-03T10:00:00+05:00", "account": "bank",
+      "debit_minor": 2500, "credit_minor": 0, "currency": "KZT", "entity_id": "entity_manual",
+      "invoice_id": null, "payment_id": "payment_a"},
+    {"row_id": "row_payment_ar_a", "timestamp": "2026-10-03T10:00:00+05:00", "account": "receivable",
+      "debit_minor": 0, "credit_minor": 2500, "currency": "KZT", "entity_id": "entity_manual",
+      "invoice_id": "invoice_manual", "payment_id": "payment_a"},
+    {"row_id": "row_bank_b", "timestamp": "2026-10-04T10:00:00+05:00", "account": "bank",
+      "debit_minor": 3500, "credit_minor": 0, "currency": "KZT", "entity_id": "entity_manual",
+      "invoice_id": null, "payment_id": "payment_b"},
+    {"row_id": "row_payment_ar_b", "timestamp": "2026-10-04T10:00:00+05:00", "account": "receivable",
+      "debit_minor": 0, "credit_minor": 3500, "currency": "KZT", "entity_id": "entity_manual",
+      "invoice_id": "invoice_manual", "payment_id": "payment_b"}
+  ],
+  "fx": []
+}
