@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+.tools/
+.cache/
 *.egg-info/
 build/
 dist/
