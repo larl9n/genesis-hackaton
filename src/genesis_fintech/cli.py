@@ -1,4 +1,4 @@
-"""CLI for project inspection and the verified clean-data milestone."""
+"""CLI for generation, development episodes and baseline evaluation."""
 
 import argparse
 import json
@@ -10,7 +10,7 @@ from . import __version__
 def main() -> int:
     parser = argparse.ArgumentParser(
         prog="genesis-fintech",
-        description="Synthetic audit environment: four error families, interactions, grading and development episodes.",
+        description="Synthetic audit environment: four error families, development episodes and baseline benchmarks.",
     )
     parser.add_argument("--version", action="version", version=__version__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -35,6 +35,10 @@ def main() -> int:
     scorer.add_argument("episode_directory")
     scorer.add_argument("--findings", required=True)
     scorer.add_argument("--inspection-steps", type=int, default=0)
+    benchmark = commands.add_parser("benchmark", help="Compare observation-only baselines with a privileged oracle")
+    benchmark.add_argument("--seeds", type=int, nargs="+", default=list(range(42, 52)))
+    benchmark.add_argument("--policy-seed", type=int, default=0)
+    benchmark.add_argument("--output", required=True)
     args = parser.parse_args()
 
     if args.command == "doctor":
@@ -58,6 +62,11 @@ def main() -> int:
         from .generation.clean import CleanConfig, generate_clean
         from .generation.storage import load_public, read_json, write_clean
         try:
+            if args.command == "benchmark":
+                from .evaluation.benchmark import run_benchmark
+                result = run_benchmark(args.seeds, Path(args.output), policy_seed=args.policy_seed)
+                print(json.dumps(result, indent=2))
+                return 0
             if args.command in {"generate-scenario", "demo"}:
                 from .generation.scenario import ScenarioConfig, generate_scenario
                 from .generation.storage import load_scenario, write_scenario
@@ -100,12 +109,13 @@ def main() -> int:
     print(json.dumps({
         "project": "genesis-fintech-env",
         "version": __version__,
-        "status": "development_episode_four_families",
+        "status": "development_baseline_benchmark",
         "implemented": ["project_info", "python_version_check", "interface_protocols", "public_record_validation",
                         "decimal_conversion", "clean_generation", "public_private_export", "independent_clean_checker",
                         "four_error_families", "fx_payment_history", "boundary_decoys", "interaction_scenarios",
-                        "truth_validation", "reward_matching", "development_reset_step", "oracle_demo"],
-        "planned": ["baseline_policies", "process_isolation", "datasets_and_failure_analysis"],
+                        "truth_validation", "reward_matching", "development_reset_step", "oracle_demo",
+                        "observation_only_baselines", "baseline_benchmark", "development_failure_analysis"],
+        "planned": ["process_isolation", "train_dev_datasets", "submission_packaging"],
         "end_to_end_available": True,
         "security_mode": "development_in_process",
     }, indent=2))

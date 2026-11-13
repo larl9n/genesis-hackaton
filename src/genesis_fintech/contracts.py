@@ -1,4 +1,4 @@
-"""Draft v0.1 interfaces. Types do not provide runtime validation or isolation.
+"""Environment/policy interfaces. Types do not provide runtime validation or isolation.
 
 Only the supervisor-side environment receives seed and config. A held-out policy
 receives an initial observation and a narrow action bridge, never an environment

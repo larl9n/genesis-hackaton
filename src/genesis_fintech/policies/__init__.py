@@ -1,1 +1,1 @@
-"""Reserved for public-data baselines; a private oracle stays evaluator-side."""
+"""Public-observation baselines; the private oracle stays evaluator-side."""
