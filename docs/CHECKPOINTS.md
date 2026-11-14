@@ -137,3 +137,11 @@ MIT, runtime/test lock (stdlib only), hash-pinned build lock, Docker base digest
 collect-trajectories читает 10 сохранённых train-эпизодов, не запускает oracle, сохраняет нулевые intermediate rewards и истинную терминальную награду. Пример reconciliation: 120 переходов, mean return0.978, без ошибок/усечений. validate-trajectories воспроизводит заявленную политику и каждое действие/наблюдение/reward; поддельные значения не принимаются даже с обновлёнными hashes. Runtime и веса модели не обучаются; exporter доверенный in-process. Evaluation reward остаётся скрытым.
 
 Полная локальная проверка 0.6.0: 176 tests, 171 passed, 5 local skips. Шесть новых проверок — три обычные политики, точное повторение/вложенный пример, отсутствие dev/private data, reward train против evaluation, replay без генератора, tamper/invalid/CLI. Чистый wheel и настоящий Linux/Docker CI для блока E проверяются отдельно.
+
+Итог блока E: [CI 43590475057](https://github.com/larl9n/genesis-hackaton/actions/runs/43590475057) для 5926630 завершился success обеих jobs. Вложенный train пример воспроизведён и побайтово совпал; установленный wheel повторил его вне repo. Две сборки source/wheel совпали по SHA256SUMS, clean source suite и настоящие Docker/HTTP прошли. Полный оценочный корпус повторён без ошибок: 80 runs, 80 replays, 20 grader-пар; worker peak <25.3 MB, OOM=0. Артефакты release/evaluation опубликованы в Actions, локальный комплект — dist/release-v0.6.0. Блок завершён, без обучения весов и без отправки организаторам.
+
+## Дополнительная косметика UI, 14 ноября
+
+Разрешена новым указанием пользователя после завершения A–E. Улучшены размеры текста, отступы и controls в рамках Hyperstudio-ТЗ; добавлен нативный progress шагов, сценарная подсказка и читаемые поля доказательств с отдельным исходным JSON. Мобильная форма/строки/диалоги переработаны без новых библиотек, endpoints или изменений финансового ядра.
+
+Проверено native Chrome: desktop около1470px, emulation400/320px, hero/lab, evidence/about dialogs, raw JSON, Escape, смена на clean, trajectory tab. Десктоп восстановлен. Живой HTTP preview локально недоступен из-за bind PermissionError; файловый режим проверен визуально, API/HTTP проверяет CI. Node VM syntax OK. Полная регрессия 176 tests: 171 passed, 5 local skips, ошибок нет. Публикация и CI косметической ревизии ещё проверяются.

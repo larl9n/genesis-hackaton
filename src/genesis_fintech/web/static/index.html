@@ -48,18 +48,19 @@
       <div class="console">
         <div class="console-top"><span><i class="console-dot"></i>GENESIS / WORKSPACE</span><span id="connection-label">ПРИМЕР · SEED 42</span></div>
         <form id="run-form" class="run-form">
-          <div class="form-heading"><div><p class="eyebrow">// НОВЫЙ ЭПИЗОД</p><h3>Начните с вопроса к данным.</h3></div><span class="tiny-label">01 / 03</span></div>
+          <div class="form-heading"><div><p class="eyebrow">// НОВЫЙ ЭПИЗОД</p><h3>Начните с вопроса к данным.</h3></div><span class="tiny-label">НАСТРОЙКА</span></div>
           <div class="field-grid">
             <label>Сценарий<select id="scenario" name="scenario"><option value="interactions">Взаимодействующие ошибки</option><option value="independent">Четыре независимые ошибки</option><option value="clean">Чистая компания</option></select></label>
             <label>Политика<select id="policy" name="policy"><option value="reconciliation">Сверка документов</option><option value="random">Случайные гипотезы</option><option value="flag-all">Отметить всё</option></select></label>
             <label class="seed-field">Seed<input id="seed" name="seed" type="number" min="0" max="2147483647" value="42" required inputmode="numeric"></label>
           </div>
+          <p id="scenario-note" class="scenario-note">Четыре типа ошибок. Два случая, в которых ошибки связаны между собой.</p>
           <div class="run-controls"><p id="mode-description">Показан сохранённый результат настоящего прогона. Для новых параметров нужен локальный сервер.</p><button class="key" id="run-button" type="submit"><span><span id="run-button-text">Смотреть пример</span> <span aria-hidden="true">↗</span></span></button></div>
           <p id="run-error" class="error-message" role="alert" hidden></p>
         </form>
         <div class="results" id="results" aria-busy="false">
           <div class="result-heading"><span class="result-status"><i class="status-dot"></i><span id="result-label">Пример завершён</span></span><span id="episode-caption" class="tiny-label">SEED 42</span></div>
-          <div class="metric-grid"><div><span>F1 / КАЧЕСТВО</span><strong id="metric-f1">—</strong></div><div><span>НАЙДЕНО / ПРОПУЩЕНО</span><strong id="metric-found">—</strong></div><div><span>ЛОЖНЫЕ ТРЕВОГИ</span><strong id="metric-fp">—</strong></div><div><span>ШАГИ / БЮДЖЕТ</span><strong id="metric-steps">—</strong></div></div>
+          <div class="metric-grid"><div><span>F1 / КАЧЕСТВО</span><strong id="metric-f1">—</strong></div><div><span>НАЙДЕНО / ПРОПУЩЕНО</span><strong id="metric-found">—</strong></div><div><span>ЛОЖНЫЕ ТРЕВОГИ</span><strong id="metric-fp">—</strong></div><div><span>ШАГИ / БЮДЖЕТ</span><strong id="metric-steps">—</strong><progress id="step-budget" max="100" value="0" aria-label="Использовано шагов из 100"></progress></div></div>
           <div class="result-meta"><span id="records-caption">Документы и проводки</span><span>НАГРАДА <b id="metric-reward">—</b></span></div>
           <div class="tab-bar" role="tablist" aria-label="Результаты аудита"><button role="tab" id="tab-findings" aria-selected="true" aria-controls="panel-findings" tabindex="0">Находки <span id="finding-count">0</span></button><button role="tab" id="tab-trajectory" aria-selected="false" aria-controls="panel-trajectory" tabindex="-1">Траектория <span id="step-count">0</span></button></div>
           <div id="panel-findings" role="tabpanel" aria-labelledby="tab-findings"><div class="list-header"><span>ТИП РАСХОЖДЕНИЯ</span><span>СУММА / ДОКАЗАТЕЛЬСТВА</span></div><div id="findings-list" class="findings-list"></div></div>

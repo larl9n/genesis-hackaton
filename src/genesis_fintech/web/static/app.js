@@ -10,6 +10,12 @@
     period_cutoff: "Счёт и его признание в книге попали в разные отчётные периоды."
   };
   const tableNames = {ledger: "Проводки", invoices: "Счета", payments: "Платежи", fx: "Курсы валют"};
+  const scenarioNotes = {
+    interactions: "Четыре типа ошибок. Два случая, в которых ошибки связаны между собой.",
+    independent: "Четыре отдельных расхождения: дубли, платежи, курсы и отчётный период.",
+    clean: "Согласованные записи с разбитыми платежами и возвратами. Проверьте отсутствие ложных тревог."
+  };
+  const accountNames = {receivable: "Дебиторская задолженность", revenue: "Выручка", bank: "Банк"};
   let live = false;
   let current = null;
   let currentRecorded = true;
@@ -21,6 +27,21 @@
     const exponent = current?.manifest?.currency_exponents?.[currency] ?? 2;
     return new Intl.NumberFormat("ru-RU", {minimumFractionDigits: exponent, maximumFractionDigits: exponent}).format(amount / 10 ** exponent) + " " + currency;
   };
+
+  const recordName = (record) => record.row_id ? "Проводка" : record.rate ? "Курс валют" : record.payment_id ? "Платёж" : "Счёт";
+  function recordFields(record, id, compact = false) {
+    const pairs = [["ID", compact ? shortId(id) : id]];
+    if (record.total_minor !== undefined) pairs.push(["Сумма счёта", money(record.total_minor, record.currency)]);
+    if (record.amount_minor !== undefined) pairs.push(["Сумма платежа", money(record.amount_minor, record.currency)]);
+    if (record.debit_minor !== undefined) pairs.push(["Дебет", money(record.debit_minor, record.currency)], ["Кредит", money(record.credit_minor, record.currency)]);
+    if (record.account) pairs.push(["Счёт учёта", accountNames[record.account] || record.account]);
+    if (record.rate) pairs.push(["Валютная пара", `${record.source_currency} → ${record.target_currency}`], ["Курс", record.rate]);
+    const date = record.issued_at || record.timestamp || record.date;
+    if (date) pairs.push(["Дата", compact ? date.slice(0, 10) : date.replace("T", " · ")]);
+    const dl = element("dl", "record-fields");
+    pairs.forEach(([label, value]) => dl.append(element("dt", "", label), element("dd", "", value)));
+    return dl;
+  }
 
   function openDialog(dialog, trigger) {
     opener = trigger || document.activeElement;
@@ -47,8 +68,14 @@
     const container = $("evidence-records"); container.replaceChildren();
     finding.evidence.forEach((evidence, position) => {
       const details = element("details"); if (position === 0) details.open = true;
-      const summary = element("summary", "", `${String(position + 1).padStart(2, "0")} / ${evidence.id}`);
-      const content = element("pre", "", evidence.record ? JSON.stringify(evidence.record, null, 2) : "Эта запись не была получена политикой через инструменты.");
+      const summary = element("summary");
+      summary.append(element("span", "evidence-number", String(position + 1).padStart(2, "0")), element("span", "", evidence.record ? recordName(evidence.record) : "Запись не получена"), element("span", "evidence-id", shortId(evidence.id)));
+      const content = element("div", "evidence-content");
+      if (evidence.record) {
+        const raw = element("details", "raw-record");
+        raw.append(element("summary", "", "Исходная запись · JSON"), element("pre", "", JSON.stringify(evidence.record, null, 2)));
+        content.append(recordFields(evidence.record, evidence.id), raw);
+      } else content.append(element("p", "dialog-description", "Эта запись не была получена политикой через инструменты."));
       details.append(summary, content); container.append(details);
     });
     openDialog($("evidence-dialog"), trigger);
@@ -67,17 +94,9 @@
     $("proof-amount").textContent = money(finding.claimed_amount_minor, finding.currency);
     finding.evidence.filter((item) => item.record).slice(0, 2).forEach((item) => {
       const record = item.record;
-      const kind = record.row_id ? "ПРОВОДКА" : record.payment_id ? "ДОКУМЕНТ / ПЛАТЁЖ" : record.rate ? "КОТИРОВКА" : "ДОКУМЕНТ / СЧЁТ";
+      const kind = recordName(record);
       const panel = element("div", "proof-record"); panel.append(element("p", "", kind));
-      const dl = element("dl");
-      const pairs = [["ID", shortId(item.id)]];
-      if (record.total_minor !== undefined) pairs.push(["Сумма", money(record.total_minor, record.currency)]);
-      if (record.debit_minor !== undefined) { pairs.push(["Дебет", money(record.debit_minor, record.currency)]); pairs.push(["Кредит", money(record.credit_minor, record.currency)]); }
-      if (record.amount_minor !== undefined) pairs.push(["Сумма", money(record.amount_minor, record.currency)]);
-      if (record.account) pairs.push(["Счёт учёта", record.account]);
-      if (record.rate) pairs.push(["Курс", record.rate]);
-      if (record.issued_at || record.timestamp || record.date) pairs.push(["Дата", (record.issued_at || record.timestamp || record.date).slice(0, 10)]);
-      pairs.forEach(([label, value]) => dl.append(element("dt", "", label), element("dd", "", value)));
+      const dl = recordFields(record, item.id, true);
       panel.append(dl); board.append(panel);
     });
   }
@@ -89,11 +108,13 @@
     $("metric-found").textContent = `${result.metrics.tp} / ${result.metrics.fn}`;
     $("metric-fp").textContent = String(result.metrics.fp);
     $("metric-steps").replaceChildren(document.createTextNode(String(result.steps) + " "), element("small", "", "/ 100"));
+    $("step-budget").value = result.steps;
     $("metric-reward").textContent = result.metrics.reward.toFixed(3);
     $("records-caption").textContent = `${result.manifest.document_count} ${plural(result.manifest.document_count, ["документ", "документа", "документов"])} · ${result.manifest.row_count} ${plural(result.manifest.row_count, ["проводка", "проводки", "проводок"])}`;
     $("episode-caption").textContent = `SEED ${result.seed} / ${recorded ? "ЗАПИСЬ" : "НОВЫЙ ПРОГОН"}`;
     $("result-label").textContent = result.truncated ? "Эпизод прерван" : result.metrics.fp ? "Прогон завершён · есть ложные тревоги" : result.metrics.fn ? "Прогон завершён · есть пропуски" : recorded ? "Пример завершён" : "Аудит завершён";
     $("result-label").parentElement.classList.toggle("is-failure", !!(result.truncated || result.metrics.fp || result.metrics.fn));
+    $("result-label").parentElement.classList.remove("is-stale");
     $("finding-count").textContent = String(result.findings.length);
     $("step-count").textContent = String(result.timeline.length);
     const list = $("findings-list"); list.replaceChildren();
@@ -105,7 +126,7 @@
       row.setAttribute("aria-label", `Открыть доказательства: ${names[finding.type] || finding.type}, ${money(finding.claimed_amount_minor, finding.currency)}`);
       const left = element("span", "finding-left"); left.append(element("span", "finding-index", String(index + 1).padStart(2, "0")));
       const title = element("span"); title.append(element("span", "finding-name", names[finding.type] || finding.type), element("span", "finding-id", shortId(finding.affected_ids[0]))); left.append(title);
-      const right = element("span", "finding-right"); const amount = element("span"); amount.append(element("span", "finding-amount", money(finding.claimed_amount_minor, finding.currency)), element("span", "finding-evidence", `${finding.evidence.length} ДОКАЗАТЕЛЬСТВ`)); right.append(amount, element("span", "finding-arrow", "↗")); row.append(left, right);
+      const right = element("span", "finding-right"); const amount = element("span"); amount.append(element("span", "finding-amount", money(finding.claimed_amount_minor, finding.currency)), element("span", "finding-evidence", `${finding.evidence.length} ${plural(finding.evidence.length, ["запись", "записи", "записей"])}`)); right.append(amount, element("span", "finding-arrow", "↗")); row.append(left, right);
       row.addEventListener("click", () => showEvidence(index, row)); list.append(row);
     });
     const trajectory = $("trajectory-list"); trajectory.replaceChildren();
@@ -167,8 +188,9 @@
   recordedMode();
   for (const id of ["scenario", "policy", "seed"]) {
     $(id).addEventListener("change", () => {
+      $("scenario-note").textContent = scenarioNotes[$("scenario").value];
       if (!live) render(window.GENESIS_SAMPLES[$("scenario").value], true);
-      else if (current) $("result-label").textContent = "Результат предыдущего прогона";
+      else if (current) { $("result-label").textContent = "Результат предыдущего прогона"; $("result-label").parentElement.classList.add("is-stale"); }
     });
   }
   if (window.GENESIS_SAMPLES?.interactions) render(window.GENESIS_SAMPLES.interactions, true);
