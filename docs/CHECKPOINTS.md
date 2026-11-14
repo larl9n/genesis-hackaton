@@ -1,5 +1,13 @@
 # Проверки по техническим этапам
 
+## Внешний worker, версия 0.4.0
+
+`make check PYTHON=.venv/bin/python`: 146 тестов, 142 проходят, 4 Docker-интеграции пропущены локально (Docker отсутствует). Проверены правильные и ошибочные JSON-line frames, размеры, UTF-8/NaN/duplicate keys, request_id, EOF, hangs, блокирование записи, stderr-флуд, очистка процессов и отказ без Docker. In-process и subprocess траектории трёх политик совпадают.
+
+Полный CLI-прогон `run-policy --seed 42 --config configs/interactions.json --backend development`: TP4/FP0/FN0, 12 действий, reward0.978. Артефакты: `artifacts/checkpoint-external-worker-2026-11-14`. Это проверка IPC, не OS-изоляции.
+
+Реальные Docker-проверки добавлены отдельной Linux job: закрытые файлы/код, сеть, read-only root, UID/caps/no-new-privileges, CPU/RAM/PID, полный эпизод и удаление зависшего контейнера. Результат CI будет записан после выполнения. Протокол и доверенная база описаны в [ISOLATION.md](ISOLATION.md).
+
 Обновлено: 14 ноября 2026 года. Локальное окружение: Python 3.11.18. Каждый этап проверялся до перехода к следующему.
 
 | Этап | Реализовано | Проверка | Результат |

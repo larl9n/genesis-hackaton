@@ -58,6 +58,15 @@ class AuditEnv:
     def _truncate(self):
         self._finish({"episode_id": self._public.manifest.episode_id, "findings": []}, self._inspections)
 
+    def abort_worker(self, reason):
+        """Supervisor-only truncation; a policy cannot call this via the tool bridge."""
+        if reason not in {"worker_timeout", "worker_protocol_error", "worker_exit"}:
+            raise DataError("unknown worker failure")
+        if not self._active:
+            raise EpisodeFinished("episode already finished")
+        self._truncate()
+        return self._record(None, {"error": reason, "remaining_steps": self.max_steps - self._steps}, False, True)
+
     def _tool(self, name, params):
         if name == "calculator":
             object_fields(params, {"expression"})

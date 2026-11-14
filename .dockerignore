@@ -1,0 +1,8 @@
+**
+!src/
+!src/genesis_fintech/
+!src/genesis_fintech/__init__.py
+!src/genesis_fintech/domain/
+!src/genesis_fintech/domain/*.py
+!src/genesis_fintech/policies/
+!src/genesis_fintech/policies/*.py

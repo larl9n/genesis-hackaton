@@ -15,3 +15,18 @@ jobs:
           python-version: "3.11"
       - name: Check data, grader and development episodes
         run: make check
+  isolated-worker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build minimal policy image
+        run: docker build -f docker/worker.Dockerfile -t genesis-audit-worker:0.4.0 .
+      - name: Test actual container isolation and complete episode
+        env:
+          GENESIS_RUN_DOCKER_TESTS: "1"
+          PYTHONPATH: src
+        run: python -m unittest discover -s tests -p test_container.py -v

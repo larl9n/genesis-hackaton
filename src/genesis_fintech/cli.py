@@ -39,6 +39,16 @@ def main() -> int:
     benchmark.add_argument("--seeds", type=int, nargs="+", default=list(range(42, 52)))
     benchmark.add_argument("--policy-seed", type=int, default=0)
     benchmark.add_argument("--output", required=True)
+    external = commands.add_parser("run-policy", help="Run an external JSON-line policy; Docker by default")
+    external.add_argument("--seed", type=int, required=True)
+    external.add_argument("--output", required=True)
+    external.add_argument("--config")
+    external.add_argument("--policy", choices=["random", "flag-all", "reconciliation"], default="reconciliation")
+    external.add_argument("--policy-seed", type=int, default=0)
+    external.add_argument("--backend", choices=["docker", "development"], default="docker")
+    external.add_argument("--image", default="genesis-audit-worker:0.4.0")
+    external.add_argument("--wall-time", type=int, default=60)
+    external.add_argument("--max-steps", type=int, default=100)
     args = parser.parse_args()
 
     if args.command == "doctor":
@@ -62,6 +72,15 @@ def main() -> int:
         from .generation.clean import CleanConfig, generate_clean
         from .generation.storage import load_public, read_json, write_clean
         try:
+            if args.command == "run-policy":
+                from .evaluation.external import run_external
+                from .generation.scenario import ScenarioConfig
+                config = ScenarioConfig.from_dict(read_json(Path(args.config))) if args.config else ScenarioConfig()
+                result = run_external(args.seed, config, Path(args.output), policy=args.policy,
+                                      policy_seed=args.policy_seed, backend=args.backend, image=args.image,
+                                      wall_time_seconds=args.wall_time, max_steps=args.max_steps)
+                print(json.dumps(result, indent=2))
+                return 0 if result["ok"] else 1
             if args.command == "benchmark":
                 from .evaluation.benchmark import run_benchmark
                 result = run_benchmark(args.seeds, Path(args.output), policy_seed=args.policy_seed)
@@ -109,14 +128,16 @@ def main() -> int:
     print(json.dumps({
         "project": "genesis-fintech-env",
         "version": __version__,
-        "status": "development_baseline_benchmark",
+        "status": "external_policy_runner",
         "implemented": ["project_info", "python_version_check", "interface_protocols", "public_record_validation",
                         "decimal_conversion", "clean_generation", "public_private_export", "independent_clean_checker",
                         "four_error_families", "fx_payment_history", "boundary_decoys", "interaction_scenarios",
                         "truth_validation", "reward_matching", "development_reset_step", "oracle_demo",
-                        "observation_only_baselines", "baseline_benchmark", "development_failure_analysis"],
-        "planned": ["process_isolation", "train_dev_datasets", "submission_packaging"],
+                        "observation_only_baselines", "baseline_benchmark", "development_failure_analysis",
+                        "bounded_worker_ipc", "external_policy_runner", "docker_worker_backend"],
+        "planned": ["train_dev_datasets", "submission_packaging"],
         "end_to_end_available": True,
         "security_mode": "development_in_process",
+        "external_backends": ["docker", "development"],
     }, indent=2))
     return 0

@@ -6,7 +6,7 @@
 
 ## Статус
 
-**Версия 0.3.0: базовые политики и сравнительный прогон.** Работают чистая история с FX/возвратами/границами, четыре семейства ошибок и две композиции, независимая проверка эталона, matching/reward, `reset/step`, инструменты и траектории. Добавлены random, flag-all, reconciliation и сравнение с evaluator-only oracle. Проходят 130 тестов. OS-изоляция, train/dev-наборы и полный пакет сдачи — следующие этапы.
+**Версия 0.4.0: внешний worker и контейнерный backend.** Работают история с FX/возвратами/границами, четыре семейства ошибок и две композиции, независимая проверка, matching/reward, инструменты и политики. Добавлен JSON-line IPC с ограничениями размера/времени и отдельный процесс политики. Docker-backend по умолчанию ограничивает файлы, сеть и ресурсы и не переключается в небезопасный режим при ошибке. Контейнерная проверка выполняется отдельной job Linux CI; локальный режим development сам по себе OS-изоляцию не подтверждает. Train/dev-наборы и полный пакет сдачи — следующие этапы.
 
 Каркас опубликован в `main`; [первый CI-прогон на Python 3.11](https://github.com/larl9n/genesis-hackaton/actions/runs/43464208929) завершился успешно.
 
@@ -116,16 +116,17 @@ PYTHONPATH=src python -m genesis_fintech benchmark --output artifacts/baseline-e
 
 ```text
 src/genesis_fintech/
-  cli.py          # генерация, валидация, score, demo, info и doctor
+  cli.py          # генерация, валидация, score, demo, benchmark и run-policy
   contracts.py    # типы и Protocol обмена среды и политики
   domain/         # строгие модели записей и Decimal-конвертация
   generation/     # история, четыре инъекции и две композиции, сохранение/чтение
   environment/    # reset/step, ограниченные инструменты и калькулятор
-  evaluation/     # проверки, matcher, reward, oracle demo и benchmark
-  policies/       # random, flag-all, reconciliation только через наблюдения
+  evaluation/     # проверки, reward, benchmark и supervisor внешнего worker
+  policies/       # базовые политики, JSON-line протокол и worker
+docker/           # минимальный образ политики без эталона и оценщика
 configs/          # чистые, независимые и взаимодействующие сценарии
 docs/             # архитектура, контракт, данные, проверки и этапы
-tests/            # 130 тестов, ручные случаи и regression-проверки
+tests/            # предметные проверки, IPC, отдельные Docker-интеграции
 .github/          # CI и шаблоны для GitHub
 ```
 
@@ -134,6 +135,7 @@ tests/            # 130 тестов, ручные случаи и regression-п
 | Документ | Содержание |
 | --- | --- |
 | [Архитектура](docs/ARCHITECTURE.md) | Модули, поток данных и границы доступа |
+| [Изоляция и внешний worker](docs/ISOLATION.md) | Запуск run-policy, протокол, ограничения, Docker и проверка |
 | [Контракт среды](docs/ENVIRONMENT.md) | Действия, наблюдения, завершение, награда |
 | [Данные](docs/DATA.md) | Открытые записи, закрытый эталон, деньги и доказательства |
 | [Ошибки и эталон](docs/ISSUES.md) | Причинные изменения, affected IDs, суммы расхождений и evidence sets |
