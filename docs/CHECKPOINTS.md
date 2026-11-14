@@ -125,3 +125,5 @@ PYTHONPATH=src .venv/bin/python -m genesis_fintech benchmark --output artifacts/
 ## Блок D: комплект 0.5.0
 
 MIT, runtime/test lock (stdlib only), hash-pinned build lock, Docker base digest, source/wheel builder и offline verifier. Allowlisted архив воспроизводится побайтово; каждый файл проверяется по SOURCE-MANIFEST. Изменённый source и symlink отвергаются; локальная переписка и закрытые данные не включаются. Три новые упаковочные проверки прошли. Полная локальная проверка: 170 тестов, 165 passed, 5 local skips. Предварительный чистый install wheel + demo + полный source-suite прошёл; финальная сборка и Linux CI выполняются отдельно. Команды — RELEASE.md, сценарий показа — DEMO.md.
+
+Первая CI-публикация 0.5.0 остановилась до job из-за YAML plain scalar с `--only-binary=:all:`. Исправлено переводом shell-команды в block scalar; повторный CI обязателен. Локальная финальная сборка source/wheel повторяется точно, clean wheel demo и полный распакованный suite 170 тестов прошли.
