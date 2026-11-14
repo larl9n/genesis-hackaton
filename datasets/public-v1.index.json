@@ -1,0 +1,230 @@
+{
+  "dataset_id": "genesis-public-v1",
+  "dataset_version": "1.0",
+  "splits": {
+    "dev": [
+      {
+        "episode_id": "episode_4c5dd2b9c31ad2dae776418993f24a6e",
+        "files": {
+          "fx.csv": "ab4df187dbbee8e272781bae82ac085164c4ea5a4e7816a2c6e2a64ff92758f2",
+          "invoices.jsonl": "f2a2ec334ed7425852f0b60f6d0243d215711d5b46da0b9f97611ea48a14aabb",
+          "ledger.csv": "ca02da9a1c9b3e1a51a3d279a435a3e86ca7ea2c3d9e1a7f21bed320befc9dae",
+          "manifest.json": "41c9ad5f89d7fc6b83d9ef673ed91368bdb9d0afd45d77036038bbd7e09d8518",
+          "payments.jsonl": "99da55ce5b8d1e1266121ef84f9d1a6a846ead6a2fce20e85b7ff2f36ffcf241",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_de59dc1dd32372461003f5b05b35d365",
+        "files": {
+          "fx.csv": "e17a9b41f2bbc3b55a803238b6c5c2b1307cde4ff040e083c31b4c0210b0d2d3",
+          "invoices.jsonl": "f469ec5c507cc5967d372bd150fa29ecdea395bc1f0e81081744cbb746f22ccd",
+          "ledger.csv": "9692fb32ffc66d9692cf125b845c26803767bed7173b377e375928a130e5ec5a",
+          "manifest.json": "1f72ac4bc505b9b06db7aa62a86da7a5ce706ace595cae6091ee1e417599bfee",
+          "payments.jsonl": "663b9391a16a9b3ff4b40b83e611847f030db4d8b0b617c4cbd07be93c1b58ee",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_9898b0501b612e5e3a20eb0e63d1f49b",
+        "files": {
+          "fx.csv": "78f587d4e9514284a3eed7a7aa716a2f5fb2a36355ce6e2a05250e492f773357",
+          "invoices.jsonl": "39938fceb6fff27f916539238c28ee823e3fe9ea45ea52ee780ddaa38d5fd92e",
+          "ledger.csv": "2363ced78d78e718b1753b21232a6ca821ecf570fd9e6938f5b58c347ada62f3",
+          "manifest.json": "d0cf7b7fbd16ab785f3f5e693dd58aabdbc0c44bca31f3015ce5dbd143c9a3bd",
+          "payments.jsonl": "f0fa9f20983d94acfb59ab5d6a4598d44779a2bf8599dc8af3077c9b0968aad5",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_6bda55d10142568f33e78201df92cfb4",
+        "files": {
+          "fx.csv": "9f097b19807e84b5f2396e8e2d68d3e7bdc434e3b8867efbd5c91fd974443f2c",
+          "invoices.jsonl": "ec921db0bb8d5dcadb4cfbe1b7282867cff929a401f6fdf87684524f02c88a4a",
+          "ledger.csv": "e9fe1ee890389b997230406a72e7e0313acbe078f8f53e44c60b154a4cb7b154",
+          "manifest.json": "2249b93dc4a11b2ef4dd87a0b3f3fdf949f273e1724336bef9492e7ad2dff15f",
+          "payments.jsonl": "503dfc08a50f441b9823bbbdf20c61bde9343618c4530ac752573fec96394371",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_d6871b6ba3d8e1947bd0395d9b4f775e",
+        "files": {
+          "fx.csv": "d92038d2c84be640821ec1deb85db4bc8d66318ada66ba7a5796e4950c5a9553",
+          "invoices.jsonl": "c0764ccc8d979e1accca13bb30717005f5c8e86c6fcf67cefccea4639b868b6f",
+          "ledger.csv": "0533caf1d03c82de98dd8cfa06de08a967fad0d543db2d4374e7a891af080126",
+          "manifest.json": "3ae15bfea1a183b705c4341c9af386a04397dbcc079ef2e1f2ab087082faeb95",
+          "payments.jsonl": "d809461caf7effae3a3ac4596a1665043dda05b2b8e4cf9e7e493b02f60eb63e",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_aa80401d884f35ceda5bf577ccd0b2b6",
+        "files": {
+          "fx.csv": "caba7fb21c3ef89fc59ae974c2f74b6ab7eb5349f302e390ab1d31ffeff5ab8e",
+          "invoices.jsonl": "b525b598af2843cff1a5fefececffb256e61194455232a9bcf7238b78eed4f2b",
+          "ledger.csv": "30f8b1f5f6528dbb01413388ba9a73a210cce83bd6a978d604771c9fa6cf80c2",
+          "manifest.json": "f0cadbe50ab609c6c36d4d70caecb5e3994607f2d169707920752d0f239b894e",
+          "payments.jsonl": "a5c567a74bf7775b3017456abdb9c5ea496a4429bd27d692becb97ce050bb82f",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_ae54f0022bc048a20e4ae98c3cfb0f58",
+        "files": {
+          "fx.csv": "5c02497b34ab45ea707b2cda84ecc4b1d118de1fabf11b3435835701d9660b58",
+          "invoices.jsonl": "0e3f1ad0795e41f7b531d5682f753f88fc6e15a56161b6c2b2911246452439a9",
+          "ledger.csv": "9bebe120c934bf29a4983edcf85ea5814c4a6053f66bc9ae83f973f8f1ff34f4",
+          "manifest.json": "7c8bd5b3b2d0a0bc993c6f0d9ee1c35546e736acc0d328f012b39ea2432bef3d",
+          "payments.jsonl": "e077ea40135a258975033f9ec7a6dfaf09b6f19341770a9cc0a636c05a038cf3",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_2557a42049be143ec2f92a5841acbb9c",
+        "files": {
+          "fx.csv": "9c5d54fc5ddd93cee98882b164c705ee54354fd606bee841a4575bdffad44947",
+          "invoices.jsonl": "c26b4e9d054ef836284890d2e906c9f3625de46d4daff52353b07640a3be0267",
+          "ledger.csv": "518b310690b5797259ccc67d6dd9c15c55a56d16186a6fe52422871ccefa1eb1",
+          "manifest.json": "bfecca53fdf6b095e62318f1cf15cc371556daa7314c8b53f79496b130f25bf2",
+          "payments.jsonl": "9a31f2b9bf0a9f1ed3a6b49b48228a672d880a377043ae5c5541b036703ecd26",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_e722b0d6767157e6ee1473d02511e955",
+        "files": {
+          "fx.csv": "ddb45952cb147f5d7ddf7ed40d8dd78999e539fad7e58b07b27ce6fd6e3fe0e6",
+          "invoices.jsonl": "bcf019a52fd122f7395fcacce33c48ce82751f7661e37ab1e861fb23039a1ae6",
+          "ledger.csv": "28c850d2311f520c74111e60c960c2100d37eab80519f3d20f0f05a816280d03",
+          "manifest.json": "1855c60068977b3ffc4e9475a1031cb59f6f7ec8da57b77e25a298cc2e21fb21",
+          "payments.jsonl": "0406ffb464b8badc47005531b74e7e11232ebb53b0213e04e51829bda22ad194",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_1c4861b858379d213574421b5198a0de",
+        "files": {
+          "fx.csv": "c6271d0f179eb2c0a4fcec7dc0deeba42f0877206f4f825777cca53fab7fbead",
+          "invoices.jsonl": "afe0865156f6baa2f830fa777e7481fa165a323419ec60a063d11822a1d084f6",
+          "ledger.csv": "cad8c77d447049f186b0c0ed95535c73694ca587fabc4d684f1c778fa2cc79ec",
+          "manifest.json": "fe0c99bb0e1389353ac18b16ffe9ae51f42efe5d669b49ae4c1059ebd32e9c49",
+          "payments.jsonl": "e020bddaeaa8f56c1955ae3e641fa4fc76c2db72a166d3296af05f59ef0aa9df",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      }
+    ],
+    "train": [
+      {
+        "episode_id": "episode_c2a7af9eab79b0056dd177d2c700d84c",
+        "files": {
+          "fx.csv": "fc0e569a460d67001f34d1ec6ee8808acdded5bf804a21dede98acf3cd7f8ddd",
+          "invoices.jsonl": "a68e76999f64e92aad556875dfc3a394ee4be9c476f97bbbf43019ea989a435a",
+          "ledger.csv": "bbfcaf1399658f11bc362cc73a5fae0be1fb52507f0b09e8517528da9babf5eb",
+          "manifest.json": "fe6b6e08bb9694a24de0ad589443eca8b60a224213ad64e0e1a331d474b59d3d",
+          "payments.jsonl": "d69047b9a1fa6c117669026ccecff7878fd63220272464da494a7051496e558b",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_c2b9546e0f0220f3edb7f1d5cbf15150",
+        "files": {
+          "fx.csv": "1836fb9dec2f3a43247628a0fe64d88404b2623ab4ece16fc06754b1cdc62641",
+          "invoices.jsonl": "e7f22580a8b51852a3e5967bf1676989f9f04b13e14fd2079b753a7d6a5bbaa8",
+          "ledger.csv": "86a829031d2c1abcc624e88ce06e6fe57e4d8484ee9a0646181347bc03a5a59f",
+          "manifest.json": "844e7e8d268e09d28e981e73630f9e77862c80d487405448337537e1c7b940b9",
+          "payments.jsonl": "14cdd555707ffb2d69d383207bf39d05247b4fc787805621b88748b2ba32a456",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_e638bca46bd70d89987fc91e855cdff8",
+        "files": {
+          "fx.csv": "e1e7ca6364161524b7419e291101991345c9614415071ca121cc05e49073ece6",
+          "invoices.jsonl": "6b71256a75f0287db86375fe2b5adfa7103f009bd763770b4ed8c95c58cc5cf0",
+          "ledger.csv": "9a96dfd1a1940c44d4e6d8953661042de57c290532733f9f9dd586db3f319775",
+          "manifest.json": "b09dc98d8e5aa77c9d5ae34bfda5d3658d8e09ba0f1af82dfb9d74e2f34dd437",
+          "payments.jsonl": "d2fa6b613626e2b75e639e4cf752437aee2fa735cff73cac978515c7a41bda6d",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_38b1f9a35c2855ba8f0f9d8c7f51c46e",
+        "files": {
+          "fx.csv": "4287c9de9f3caccf209c75d615f1791bf1c44b28b5475364b140e47654184322",
+          "invoices.jsonl": "ad29941480acb5c8b21acb6867517bc6afee530a779774e9cc0e5285bb515302",
+          "ledger.csv": "5155e176795c850c7e90c7c6bdab8eb6f1e7db4e48d478957e8b1246296d381d",
+          "manifest.json": "fc365adbef2825c2c88450c8954bebcf3013d521f18c46bb2457fdf2faccf6e5",
+          "payments.jsonl": "4bdb86bf1d9fc2cabeab2b7b7f1c96864a9485168b65c67d70897f2d30eca57b",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_b8004092f9e22b921b38eefa6bced784",
+        "files": {
+          "fx.csv": "891f95ca407b99ea32f178950d3e53198cca980ff55e0c31e93744d2daf4ed86",
+          "invoices.jsonl": "43a3c2708b4dd9b3bb82529b9b3b810dd8a702f4ec843c78c0e1701e6ae4c43f",
+          "ledger.csv": "97ddd7736edb2515055a6aa611dc6340b1f3f4923c447763dc751a4067485c30",
+          "manifest.json": "d5ca5d1e4de93bd35bb215b403457536b629768a05f56f5bfee4e52d457f8af0",
+          "payments.jsonl": "4cc93cafe0a12e7a41f1de5f0bd6ada5ee7a529865c71db7d9de1a67aa7c2ebb",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_662e0001e6f57713ca1ebac97bad1f68",
+        "files": {
+          "fx.csv": "e0363a53ea89dae6f1e1e0382a566b7081bce75339f44a5338ff710f29847a0f",
+          "invoices.jsonl": "93fa6b44692d1e3c54d3554f6786790ade00c99fc6fd62e7764014505d22c0f2",
+          "ledger.csv": "ae1d2bafa0ce76e7da15fd0caae001486ed3c66441f1561f7b5457239f89b0fe",
+          "manifest.json": "5ee28b4f0be8cb16c164efdde4dcfff770a1409adb1f913162399afdf45e9d15",
+          "payments.jsonl": "e0bff61ed51f20a9d142db97bab652d8ee588f0cef2857353af25b7d7b54c522",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_71985eb13a8839190e4bd00558bc15e5",
+        "files": {
+          "fx.csv": "467d3a328619c8db93acd7393e93bfd36979618beaef220c177ff51725aba1c0",
+          "invoices.jsonl": "74a6fc279fe9f63735422c60177bc14b262cb59d8f6a5a224bf1e4a03102cb6c",
+          "ledger.csv": "79860c2fd11f16c24a928bfff39cd994d40b7179f0caf064be1cdb7c38719bb4",
+          "manifest.json": "1da1f4bb93586c69ad8bb28aeff2bea143cc5be3c45d459264512c2ffdd165b0",
+          "payments.jsonl": "b8e3d1fbdb0f41839d0ff24dc440d95e4a66af861e1221a1e0495158f04fe959",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_d6bc0d35ccec83e4083fb0efdb1ed801",
+        "files": {
+          "fx.csv": "dd9434b72f2df65b7e85b1b625ca8b0df3850905bbb6c74ae96c6f41a125d8b5",
+          "invoices.jsonl": "4d177cfcace52a70f8a595b35eac28aa736176922a62b577d7b3d335c6a665fe",
+          "ledger.csv": "0c3dbc384f656a8e201705994111482c82f5ff4e88bce61ecad78af96bb8f0f0",
+          "manifest.json": "bb5ae942d975756ed2464192de6a07383f7c35d2225be5c1ceb2b36a6de8eab0",
+          "payments.jsonl": "b66ffeb72e10863f090c6957620e82c30056e64d8427d0fcc3baa4a8943ba0e5",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_71f2223ff559a0f9f65923cd85132c85",
+        "files": {
+          "fx.csv": "cef08823928438ec809b547eae432999c362c47e269e060d192857488c38063c",
+          "invoices.jsonl": "705c8e10711417b896ab4f98c8c5dd448451dd136a1c83d7644fd6acbf7f2e23",
+          "ledger.csv": "597d9b5a9b287a24276e1c96086923b627f20750592714aec5376291e7c4184f",
+          "manifest.json": "8592c6052b90e532e8b15fcb071307c3e9da6cdf2df1385f25e508bed00f37b8",
+          "payments.jsonl": "9e52ecac43bccd1eb44f896fc0a898d3032cbd3efe3f77232530e842bc28f540",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      },
+      {
+        "episode_id": "episode_fecef7077cc3c602030c06ab2e21172d",
+        "files": {
+          "fx.csv": "6af3b7de5a0a3b486fefb178c5873d621cfca682bd5f0cee7b93483b23e79cf7",
+          "invoices.jsonl": "f235df5b253359c03edf45d8b2f39650bee23a39504afeeefb722ece6d7ec074",
+          "ledger.csv": "b1be7afa6cb88319e8a957187656f056042f45d45947833232acc48bd43e4f41",
+          "manifest.json": "f9fedde2dca149d08437c018d0ac3cf750b28c4b6b6a063a6b23e3ae80ac3e47",
+          "payments.jsonl": "7d62f63fa66c3e13a88210241d17f49db7a85930505c8e117c5cc07363d510c3",
+          "policy.json": "f32549003dae3aef9188ee70ceb31f22fe76590cff44e8a6154d962c5357906d"
+        }
+      }
+    ]
+  }
+}

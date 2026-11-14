@@ -18,3 +18,4 @@ check: doctor info test
 	$(PYTHON) -m json.tool configs/scenario.json > /dev/null
 	$(PYTHON) -m json.tool configs/full.json > /dev/null
 	$(PYTHON) -m json.tool configs/interactions.json > /dev/null
+	$(PYTHON) -m json.tool configs/dataset.json > /dev/null

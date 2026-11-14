@@ -185,17 +185,35 @@ def run_external(seed, config, output, *, policy="reconciliation", policy_seed=0
         generated = generate_scenario(seed, config)
         output = Path(output)
         write_scenario(generated, output)
-        env = AuditEnv(mode="evaluation", max_steps=max_steps, wall_time_seconds=wall_time_seconds)
-        initial, _ = env.reset(seed, config.to_dict())
-        started = time.monotonic()
-        result = drive_worker(env, initial, command, cwd=cwd, child_env=child_env,
-                              deadline=started + wall_time_seconds)
-        result.update(version=__version__, protocol_version=1, policy=policy,
-                      policy_seed=policy_seed, backend=backend, worker_image_id=image_id,
-                      security_mode="docker_container" if backend == "docker" else "development_subprocess",
-                      elapsed_seconds=time.monotonic() - started, ok=not result["truncated"])
-        (output / "summary.json").write_text(json_text(result), encoding="utf-8")
-        with (output / "trajectories.jsonl").open("x", encoding="utf-8") as stream:
-            for item in env.trajectory:
-                stream.write(json.dumps(item, ensure_ascii=False, sort_keys=True) + "\n")
-        return result
+        return _run_loaded(generated.public, generated.truth, output, command, cwd, child_env, image_id,
+                           policy, policy_seed, backend, wall_time_seconds, max_steps)
+
+
+def run_external_episode(public, truth, output, *, policy="reconciliation", policy_seed=0,
+                         backend="docker", image=DEFAULT_IMAGE, wall_time_seconds=60, max_steps=100):
+    """Evaluate the exact stored episode. Seed/config are never required by the worker."""
+    integer(wall_time_seconds, "wall_time_seconds", 1, 60)
+    integer(max_steps, "max_steps", 1, 100)
+    with worker_launch(backend, policy, policy_seed, image) as (command, cwd, child_env, image_id):
+        output = Path(output)
+        output.mkdir(parents=True, exist_ok=False)
+        return _run_loaded(public, truth, output, command, cwd, child_env, image_id,
+                           policy, policy_seed, backend, wall_time_seconds, max_steps)
+
+
+def _run_loaded(public, truth, output, command, cwd, child_env, image_id,
+                policy, policy_seed, backend, wall_time_seconds, max_steps):
+    env = AuditEnv(mode="evaluation", max_steps=max_steps, wall_time_seconds=wall_time_seconds)
+    initial, _ = env.reset_episode(public, truth)
+    started = time.monotonic()
+    result = drive_worker(env, initial, command, cwd=cwd, child_env=child_env,
+                          deadline=started + wall_time_seconds)
+    result.update(version=__version__, protocol_version=1, policy=policy,
+                  policy_seed=policy_seed, backend=backend, worker_image_id=image_id,
+                  security_mode="docker_container" if backend == "docker" else "development_subprocess",
+                  elapsed_seconds=time.monotonic() - started, ok=not result["truncated"])
+    (output / "summary.json").write_text(json_text(result), encoding="utf-8")
+    with (output / "trajectories.jsonl").open("x", encoding="utf-8") as stream:
+        for item in env.trajectory:
+            stream.write(json.dumps(item, ensure_ascii=False, sort_keys=True) + "\n")
+    return result

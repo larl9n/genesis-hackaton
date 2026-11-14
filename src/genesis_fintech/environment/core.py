@@ -30,8 +30,12 @@ class AuditEnv:
     def reset(self, seed, config=None):
         config = ScenarioConfig() if config is None else ScenarioConfig.from_dict(config)
         generated = generate_scenario(seed, config)
-        validate_truth(generated.public, generated.truth)
-        self._public, self._truth = generated.public, generated.truth
+        return self.reset_episode(generated.public, generated.truth)
+
+    def reset_episode(self, public, truth):
+        """Supervisor-only reset from independently checked stored records; no regeneration."""
+        validate_truth(public, truth)
+        self._public, self._truth = public, truth
         self._tables = {
             "ledger": [(r.row_id, r.to_dict()) for r in self._public.ledger],
             "invoices": [(r.invoice_id, r.to_dict()) for r in self._public.invoices],

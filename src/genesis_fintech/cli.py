@@ -18,6 +18,19 @@ def main() -> int:
     commands.add_parser("doctor", help="Check the required Python version")
     web = commands.add_parser("serve", help="Start the local audit UI on loopback")
     web.add_argument("--port", type=int, default=8765)
+    dataset = commands.add_parser("generate-dataset", help="Create a frozen 10-train/10-dev corpus and public archive")
+    dataset.add_argument("--spec", required=True)
+    dataset.add_argument("--output", required=True)
+    dataset_check = commands.add_parser("validate-dataset", help="Independently verify dataset bytes, truth and optional replay")
+    dataset_check.add_argument("directory")
+    dataset_check.add_argument("--replay", action="store_true")
+    suite = commands.add_parser("evaluate-dataset", help="Evaluate all stored episodes with external policies and host-only oracle")
+    suite.add_argument("directory")
+    suite.add_argument("--output", required=True)
+    suite.add_argument("--backend", choices=["docker", "development"], default="docker")
+    suite.add_argument("--image", default="genesis-audit-worker:0.4.0")
+    suite.add_argument("--policy-seed", type=int, default=17)
+    suite.add_argument("--replay", action="store_true")
     generate = commands.add_parser("generate-clean", help="Generate and independently check a clean company")
     generate.add_argument("--seed", type=int, required=True)
     generate.add_argument("--output", required=True)
@@ -74,6 +87,18 @@ def main() -> int:
         from .generation.clean import CleanConfig, generate_clean
         from .generation.storage import load_public, read_json, write_clean
         try:
+            if args.command == "evaluate-dataset":
+                from .evaluation.suite import evaluate_dataset
+                result = evaluate_dataset(Path(args.directory), Path(args.output), backend=args.backend,
+                                          image=args.image, policy_seed=args.policy_seed, replay=args.replay)
+                print(json.dumps(result, indent=2))
+                return 0
+            if args.command in {"generate-dataset", "validate-dataset"}:
+                from .generation.datasets import generate_dataset, validate_dataset
+                result = (generate_dataset(read_json(Path(args.spec)), Path(args.output))
+                          if args.command == "generate-dataset" else validate_dataset(Path(args.directory), replay=args.replay))
+                print(json.dumps(result, indent=2))
+                return 0
             if args.command == "serve":
                 from .web.server import serve
                 serve(args.port)
@@ -134,14 +159,15 @@ def main() -> int:
     print(json.dumps({
         "project": "genesis-fintech-env",
         "version": __version__,
-        "status": "external_policy_runner",
+        "status": "frozen_corpus_evaluator",
         "implemented": ["project_info", "python_version_check", "interface_protocols", "public_record_validation",
                         "decimal_conversion", "clean_generation", "public_private_export", "independent_clean_checker",
                         "four_error_families", "fx_payment_history", "boundary_decoys", "interaction_scenarios",
                         "truth_validation", "reward_matching", "development_reset_step", "oracle_demo",
                         "observation_only_baselines", "baseline_benchmark", "development_failure_analysis",
-                        "bounded_worker_ipc", "external_policy_runner", "docker_worker_backend", "local_audit_ui"],
-        "planned": ["train_dev_datasets", "submission_packaging"],
+                        "bounded_worker_ipc", "external_policy_runner", "docker_worker_backend", "local_audit_ui",
+                        "frozen_train_dev_datasets", "stored_episode_evaluation", "corpus_conformance_checks"],
+        "planned": ["submission_packaging"],
         "end_to_end_available": True,
         "security_mode": "development_in_process",
         "external_backends": ["docker", "development"],

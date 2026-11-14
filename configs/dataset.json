@@ -1,0 +1,584 @@
+{
+  "dataset_id": "genesis-public-v1",
+  "dataset_version": "1.0",
+  "generator_version": "0.2.0",
+  "scenario_generator_version": "0.2.0",
+  "splits": {
+    "dev": [
+      {
+        "config": {
+          "allocation_errors": 0,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "USD",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "EUR",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "1.08",
+            "invoice_count": 56,
+            "partial_percent": 60,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 55,
+            "timezone": "Asia/Almaty"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 0,
+          "duplicate_invoices": 0,
+          "fx_error_mode": "rate",
+          "fx_errors": 0,
+          "interaction_scenarios": []
+        },
+        "seed": 10000
+      },
+      {
+        "config": {
+          "allocation_errors": 0,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "EUR",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "0.92",
+            "invoice_count": 56,
+            "partial_percent": 60,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 55,
+            "timezone": "UTC"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 0,
+          "duplicate_invoices": 0,
+          "fx_error_mode": "rate",
+          "fx_errors": 0,
+          "interaction_scenarios": []
+        },
+        "seed": 10001
+      },
+      {
+        "config": {
+          "allocation_errors": 1,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "JPY",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "150.25",
+            "invoice_count": 56,
+            "partial_percent": 60,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 55,
+            "timezone": "Asia/Almaty"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 0,
+          "duplicate_invoices": 1,
+          "fx_error_mode": "rate",
+          "fx_errors": 0,
+          "interaction_scenarios": []
+        },
+        "seed": 10002
+      },
+      {
+        "config": {
+          "allocation_errors": 1,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "KWD",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "0.305",
+            "invoice_count": 56,
+            "partial_percent": 60,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 55,
+            "timezone": "UTC"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 1,
+          "duplicate_invoices": 1,
+          "fx_error_mode": "rate",
+          "fx_errors": 1,
+          "interaction_scenarios": []
+        },
+        "seed": 10003
+      },
+      {
+        "config": {
+          "allocation_errors": 1,
+          "allocation_mode": "missing",
+          "clean": {
+            "base_currency": "KZT",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "500.25",
+            "invoice_count": 56,
+            "partial_percent": 60,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 55,
+            "timezone": "Asia/Almaty"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 1,
+          "duplicate_invoices": 1,
+          "fx_error_mode": "date",
+          "fx_errors": 1,
+          "interaction_scenarios": []
+        },
+        "seed": 10004
+      },
+      {
+        "config": {
+          "allocation_errors": 0,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "USD",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "EUR",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "1.08",
+            "invoice_count": 56,
+            "partial_percent": 60,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 55,
+            "timezone": "UTC"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 0,
+          "duplicate_invoices": 0,
+          "fx_error_mode": "rate",
+          "fx_errors": 3,
+          "interaction_scenarios": []
+        },
+        "seed": 10005
+      },
+      {
+        "config": {
+          "allocation_errors": 0,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "EUR",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "0.92",
+            "invoice_count": 56,
+            "partial_percent": 60,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 55,
+            "timezone": "Asia/Almaty"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 3,
+          "duplicate_invoices": 0,
+          "fx_error_mode": "rate",
+          "fx_errors": 0,
+          "interaction_scenarios": []
+        },
+        "seed": 10006
+      },
+      {
+        "config": {
+          "allocation_errors": 1,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "JPY",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "150.25",
+            "invoice_count": 56,
+            "partial_percent": 60,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 55,
+            "timezone": "UTC"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 1,
+          "duplicate_invoices": 1,
+          "fx_error_mode": "rate",
+          "fx_errors": 1,
+          "interaction_scenarios": [
+            "fx_allocation",
+            "duplicate_cutoff"
+          ]
+        },
+        "seed": 10007
+      },
+      {
+        "config": {
+          "allocation_errors": 3,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "KWD",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "0.305",
+            "invoice_count": 56,
+            "partial_percent": 60,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 55,
+            "timezone": "Asia/Almaty"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 3,
+          "duplicate_invoices": 3,
+          "fx_error_mode": "rate",
+          "fx_errors": 3,
+          "interaction_scenarios": []
+        },
+        "seed": 10008
+      },
+      {
+        "config": {
+          "allocation_errors": 1,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "KZT",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "500.25",
+            "invoice_count": 56,
+            "partial_percent": 60,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 55,
+            "timezone": "UTC"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 1,
+          "duplicate_invoices": 1,
+          "fx_error_mode": "rate",
+          "fx_errors": 1,
+          "interaction_scenarios": [
+            "fx_allocation",
+            "duplicate_cutoff"
+          ]
+        },
+        "seed": 10009
+      }
+    ],
+    "train": [
+      {
+        "config": {
+          "allocation_errors": 0,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "KZT",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "500.25",
+            "invoice_count": 60,
+            "partial_percent": 25,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 30,
+            "timezone": "Asia/Almaty"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 0,
+          "duplicate_invoices": 0,
+          "fx_error_mode": "rate",
+          "fx_errors": 0,
+          "interaction_scenarios": []
+        },
+        "seed": 1000
+      },
+      {
+        "config": {
+          "allocation_errors": 0,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "USD",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "EUR",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "1.08",
+            "invoice_count": 60,
+            "partial_percent": 25,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 30,
+            "timezone": "UTC"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 0,
+          "duplicate_invoices": 0,
+          "fx_error_mode": "rate",
+          "fx_errors": 0,
+          "interaction_scenarios": []
+        },
+        "seed": 1001
+      },
+      {
+        "config": {
+          "allocation_errors": 1,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "EUR",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "0.92",
+            "invoice_count": 60,
+            "partial_percent": 25,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 30,
+            "timezone": "Asia/Almaty"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 0,
+          "duplicate_invoices": 1,
+          "fx_error_mode": "rate",
+          "fx_errors": 0,
+          "interaction_scenarios": []
+        },
+        "seed": 1002
+      },
+      {
+        "config": {
+          "allocation_errors": 1,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "JPY",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "150.25",
+            "invoice_count": 60,
+            "partial_percent": 25,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 30,
+            "timezone": "UTC"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 1,
+          "duplicate_invoices": 1,
+          "fx_error_mode": "rate",
+          "fx_errors": 1,
+          "interaction_scenarios": []
+        },
+        "seed": 1003
+      },
+      {
+        "config": {
+          "allocation_errors": 1,
+          "allocation_mode": "missing",
+          "clean": {
+            "base_currency": "KWD",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "0.305",
+            "invoice_count": 60,
+            "partial_percent": 25,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 30,
+            "timezone": "Asia/Almaty"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 1,
+          "duplicate_invoices": 1,
+          "fx_error_mode": "date",
+          "fx_errors": 1,
+          "interaction_scenarios": []
+        },
+        "seed": 1004
+      },
+      {
+        "config": {
+          "allocation_errors": 0,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "KZT",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "500.25",
+            "invoice_count": 60,
+            "partial_percent": 25,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 30,
+            "timezone": "UTC"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 0,
+          "duplicate_invoices": 0,
+          "fx_error_mode": "rate",
+          "fx_errors": 3,
+          "interaction_scenarios": []
+        },
+        "seed": 1005
+      },
+      {
+        "config": {
+          "allocation_errors": 0,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "USD",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "EUR",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "1.08",
+            "invoice_count": 60,
+            "partial_percent": 25,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 30,
+            "timezone": "Asia/Almaty"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 3,
+          "duplicate_invoices": 0,
+          "fx_error_mode": "rate",
+          "fx_errors": 0,
+          "interaction_scenarios": []
+        },
+        "seed": 1006
+      },
+      {
+        "config": {
+          "allocation_errors": 1,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "EUR",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "0.92",
+            "invoice_count": 60,
+            "partial_percent": 25,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 30,
+            "timezone": "UTC"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 1,
+          "duplicate_invoices": 1,
+          "fx_error_mode": "rate",
+          "fx_errors": 1,
+          "interaction_scenarios": [
+            "fx_allocation",
+            "duplicate_cutoff"
+          ]
+        },
+        "seed": 1007
+      },
+      {
+        "config": {
+          "allocation_errors": 3,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "JPY",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "150.25",
+            "invoice_count": 60,
+            "partial_percent": 25,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 30,
+            "timezone": "Asia/Almaty"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 3,
+          "duplicate_invoices": 3,
+          "fx_error_mode": "rate",
+          "fx_errors": 3,
+          "interaction_scenarios": []
+        },
+        "seed": 1008
+      },
+      {
+        "config": {
+          "allocation_errors": 1,
+          "allocation_mode": "partial",
+          "clean": {
+            "base_currency": "KWD",
+            "boundary_invoices": 4,
+            "config_version": "0.2",
+            "foreign_currency": "USD",
+            "foreign_payment_invoices": 12,
+            "foreign_rate": "0.305",
+            "invoice_count": 60,
+            "partial_percent": 25,
+            "period_end": "2026-11-01T00:00:00+05:00",
+            "period_start": "2026-10-01T00:00:00+05:00",
+            "refund_invoices": 4,
+            "split_percent": 30,
+            "timezone": "UTC"
+          },
+          "config_version": "0.2",
+          "cutoff_errors": 1,
+          "duplicate_invoices": 1,
+          "fx_error_mode": "rate",
+          "fx_errors": 1,
+          "interaction_scenarios": [
+            "fx_allocation",
+            "duplicate_cutoff"
+          ]
+        },
+        "seed": 1009
+      }
+    ]
+  }
+}

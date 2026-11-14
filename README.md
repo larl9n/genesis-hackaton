@@ -23,6 +23,18 @@
 
 Для обязательной реализации не нужны платные API и GPU. Отдельный сайт и обучение весов модели необязательны. Все финансовые данные синтетические.
 
+## Замороженные train/dev и единая оценка
+
+В `datasets/public-v1.tar.gz` находятся 10 train + 10 dev эпизодов без скрытых ответов; index содержит hashes. Полный корпус для оценщика воспроизводится из рецепта:
+
+```bash
+PYTHONPATH=src python -m genesis_fintech generate-dataset --spec configs/dataset.json --output artifacts/public-corpus-v1
+PYTHONPATH=src python -m genesis_fintech validate-dataset artifacts/public-corpus-v1 --replay
+PYTHONPATH=src python -m genesis_fintech evaluate-dataset artifacts/public-corpus-v1 --output artifacts/corpus-evaluation --replay
+```
+
+Оценка по умолчанию требует заранее собранный Docker worker image. Три обычные политики работают с одинаковыми сохранёнными записями; oracle остаётся на стороне оценщика. Выполняются 80 прогонов, 80 повторов и 20 grader-пар ID/order; формируются метрики, отчёт и траектории. Явный `--backend development` разрешён только для доверенной локальной проверки. [Данные](docs/DATASETS.md), [методика](docs/CONFORMANCE.md).
+
 ## Быстрый старт
 
 ### Открыть UI

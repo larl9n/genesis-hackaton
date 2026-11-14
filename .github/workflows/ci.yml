@@ -34,3 +34,13 @@ jobs:
           GENESIS_RUN_DOCKER_TESTS: "1"
           PYTHONPATH: src
         run: python -m unittest discover -s tests -p test_container.py -v
+      - name: Generate and verify frozen public corpus
+        env:
+          PYTHONPATH: src
+        run: |
+          python -m genesis_fintech generate-dataset --spec configs/dataset.json --output artifacts/ci-corpus
+          cmp artifacts/ci-corpus/public-index.json datasets/public-v1.index.json
+      - name: Evaluate all stored episodes in containers and repeat
+        env:
+          PYTHONPATH: src
+        run: python -m genesis_fintech evaluate-dataset artifacts/ci-corpus --output artifacts/ci-evaluation --replay
