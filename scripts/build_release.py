@@ -25,7 +25,7 @@ FILES = ("README.md", "CONTRIBUTING.md", "AGENTS.md", "LICENSE", "Makefile", "py
          "examples/training-v1/trajectories.jsonl")
 PATTERNS = ("src/**/*.py", "src/genesis_fintech/web/static/*", "tests/test_*.py",
             "tests/README.md", "tests/fixtures/*.json", "configs/*.json", "docs/*.md",
-            "scripts/*.py", "docker/*.Dockerfile", ".github/workflows/*.yml", ".github/*.md",
+            "scripts/*.py", "scripts/*.cjs", "docker/*.Dockerfile", ".github/workflows/*.yml", ".github/*.md",
             ".github/ISSUE_TEMPLATE/*.md")
 
 

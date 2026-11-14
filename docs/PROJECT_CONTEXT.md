@@ -1,6 +1,24 @@
 # Состояние проекта для продолжения
 
-Последнее изменение: пользователь разрешил четыре дополнительные функции при оставшихся20% лимита. Реализованы web/interactive.py, extras.js/comparisons.js, новые UI/API и тесты: граф явных ссылок, сравнение трёх политик, ручные bounded sessions, HTML-отчёт/ручной JSON. 181 тест локально:176 passed/5 skips; Node VM syntax и82 HTML IDs проверены. Финальная публикация/CI проверяются. Ручной аудит доступен через serve,60s/100 действий, максимум8 sessions, cleanup75s. Нужен restart сервера после обновления. Native Chrome на новой попытке дал серый screenshot — визуальное QA новых четырёх функций не подтверждено. Финансовое ядро и engine0.6.0 сохранены; не начинать новые необязательные блоки после этого. Старые итоги ниже — история.
+## Последнее поручение: завершение UI и Helvetica Now Display
+
+Новое указание пользователя имеет приоритет над прежней остановкой ради квоты: дополнить
+проект и сменить типографику. Пользователь подтвердил: файлов шрифта пока нет.
+Реализованы local Helvetica Now Display 400/700/900 с Helvetica Neue/Helvetica/Arial fallback,
+heavy hero/заголовки, Regular текст/навигация, адаптивные размеры; оригинальное дизайн-ТЗ
+получило явный override. Не заявлять, что настоящий webfont вложен в проект.
+Добавлены справка метрик, удаление отдельных ручных находок, подпись фиксированного
+эпизода, сброс старого черновика, защита от повторного старта/гонок и stale comparison,
+блокировка параметров основного прогона. Событийные JS-регрессии включены в CI.
+Локально 181 Python тест (176 passed/5 skips) и JS event checks прошли. Chrome: desktop
+hero/справка/сравнение/граф-переход к записи; 320px hero и 400px форма просмотрены.
+Live manual browser E2E не проверялся; шрифтовой QA — с fallback. Ожидается результат
+публикации/CI этой ревизии. Engine остаётся 0.6.0; core/API/корпус не менялись.
+
+## Предыдущая проверенная ревизия
+
+
+Последнее изменение завершено: все четыре дополнительные функции опубликованы в main как b2023b7787db610d9637f1edd06c7772707b13e8. CI43601403425 success обеих jobs: обычные181 тест/реальный HTTP compare+manual, четыре JS syntax checks, clean source/wheel, Docker suite80/80/20. Локально181 тест:176 passed/5 skips, Node VM и82 HTML IDs проверены. Реализованы web/interactive.py, extras.js/comparisons.js: граф явных ссылок, сравнение трёх политик, ручные bounded sessions, HTML-отчёт/ручной JSON. Ручной аудит через serve:60s/100 действий, максимум8 sessions, cleanup75s; нужен restart сервера после обновления. Native Chrome дал серый screenshot — визуальное QA новых четырёх функций не подтверждено. Engine0.6.0 сохранён; пользователь просил экономить остаток20%, не начинать новые необязательные блоки. Финальные записи ниже сохранены локально после проверенной публикации. Старые итоги — история.
 
 Обновлено: 14 ноября 2026 года. Engine — **0.6.0**, основной кейс A–E завершён; дополнительная косметика UI по новому поручению пользователя тоже завершена. Main — 2785fb12788e98d8782ed815bcff061556a0c5c6, CI 43592727956 success обеих jobs. Улучшены читаемость, мобильная форма, метрики и доказательства по Hyperstudio-ТЗ. Native Chrome desktop/400px/320px и диалоги проверены; 176 тестов, 171 passed, 5 local skips, Docker/HTTP подтверждены CI. Последующие указания пользователя имеют приоритет над этим файлом.
 
@@ -145,3 +163,6 @@ examples/training-v1 включён в source allowlist: reconciliation policy s
 Локальный проверенный пакет — dist/release-v0.5.0: source SHA256 54202d4683c9dd66411b93662c4e22b7502f09ff7c2e4630f2e1e3a544c99ebd, wheel dd3aeb144994f35973ff271abfd1c78aa72b9cd63ed926c3e0671fb230e37b49. Устаревшие промежуточные dist-копии удалены. Editable-установка .venv тоже обновлена до 0.5.0, doctor подтверждает Python3.11.18; системный Python не менялся. Все 106 файлов allowlist совпали с remote Git blob SHA перед этой финальной локальной записью контекста. origin/main обновлён fetch до 762aeef; локальные HEAD/index остаются прежними из-за защиты .git, не делать reset/очистку файлов. Эта итоговая запись контекста сделана локально после проверенной публикации. Организаторам ничего не отправлялось.
 
 UI polish final: commit 2785fb12788e98d8782ed815bcff061556a0c5c6, CI 43592727956 success. Local updated bundle: dist/release-v0.6.0-ui; source SHA256 9cbf898c949ef8f323f24530472951aa186308570b50f83792514a58032a47c4, wheel 2c5965285114a9783fb3c7c65b7dd3a84452389786330391cc6064fdb14fb936. These final context/UI/checkpoint receipts are local after the verified publication. Native Chrome preview remains open; DevTools closed and desktop restored. Local HEAD/index still old due protected .git; origin/main updated to 2785fb1.
+
+
+Final interactive UI: commit b2023b7787db610d9637f1edd06c7772707b13e8, CI https://github.com/larl9n/genesis-hackaton/actions/runs/43601403425 success (both jobs). 181 tests + actual HTTP comparison/manual flow, JS syntax, offline wheel/source and Docker corpus checks passed. Local verified package: dist/release-v0.6.0-interactive. Native Chrome new-feature visual QA remains unconfirmed (gray screenshot). Engine 0.6.0; origin/main fetched; protected local HEAD/index remain old. No further optional blocks: preserve user remaining quota.

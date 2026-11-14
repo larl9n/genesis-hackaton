@@ -35,7 +35,7 @@ UI встроен в Python-проект: HTML/CSS/JavaScript без Node, npm, 
 - Строгие Host/Origin, только application/json, без CORS-разрешений сторонним сайтам.
 - Static разрешён только явным списком. Нет endpoint для файлов проекта, private или произвольной директории.
 - CSP, nosniff, frame denial; динамические данные вставляются через textContent, не HTML.
-- Все ассеты локальные. Платные Aeonik/Input не включены; используются font stacks Aeonik/Inter и Input/IBM Plex Mono с системным fallback. При отсутствии этих шрифтов внешний вид использует системный grotesk/mono.
+- Все ассеты локальные. Основной stack: Helvetica Now Display → Helvetica Neue → Helvetica → Arial. Файлов Helvetica Now Display пока нет (подтверждено пользователем); local faces 400/700/900 используют установленный шрифт, иначе fallback. Технические IDs/JSON/подписи сохраняют monospace. Внешних запросов за шрифтами нет.
 
 ## Доступность и адаптивность
 
@@ -82,3 +82,36 @@ PYTHONPATH=src .venv/bin/python scripts/build_ui_samples.py
 Новые маршруты POST /api/compare, /api/manual/start, /api/manual/step имеют тот же Host/Origin/JSON контроль. Manual sessions — случайные capability tokens в памяти, максимум8, cleanup через75 секунд, отдельная блокировка каждого эпизода. Final/expired session повторно не используется. Обычные запросы до4 KiB, только manual/step до64 KiB; общий лимит двух HTTP-вычислений сохранён. Перезапустите serve после обновления исходников. Это локальный доверенный интерфейс, не внешний многопользовательский сервис.
 
 Пять новых функциональных тестов покрывают сравнение/recordings, чистый ручной аудит и документы, отсутствие промежуточного score/truth, независимость sessions, timeout, capacity/expiry, origin/frames. Настоящий HTTP test в CI дополнен compare/start/submit. Локальная регрессия181:176 passed,5 skips; четыре JS-файла синтаксически проверены Node VM. При повторном native Chrome QA браузер вернул серый screenshot и недоступное содержимое после reload; визуальная приёмка новых элементов не подтверждена. Ранее подтверждённая косметика остаётся отдельной проверкой. Финальный CI новых функций проверяется отдельно.
+
+
+Final interactive UI: commit b2023b7787db610d9637f1edd06c7772707b13e8, CI https://github.com/larl9n/genesis-hackaton/actions/runs/43601403425 success (both jobs). 181 tests + actual HTTP comparison/manual flow, JS syntax, offline wheel/source and Docker corpus checks passed. Local verified package: dist/release-v0.6.0-interactive. Native Chrome new-feature visual QA remains unconfirmed (gray screenshot). Engine 0.6.0; origin/main fetched; protected local HEAD/index remain old. No further optional blocks: preserve user remaining quota.
+
+
+## Типографика и завершение UI, 14 ноября
+
+По новому указанию пользователя hero использует вес 900, заголовки 700, плотный tracking
+−0.035…−0.055em и line-height 1…1.08. Основной текст и навигация — 400; основной текст
+получил line-height 1.55. Это явно согласованное изменение прежнего ТЗ с regular Aeonik.
+Helvetica Now Display подключён через local(); файлы шрифта пока не предоставлены,
+поэтому текущий внешний вид использует доступный fallback. То же семейство и тяжёлые
+заголовки заданы в HTML-отчёте. Webfont-файлы в пакет не включены.
+
+Добавлена раскрываемая справка TP/FP/FN/F1/reward. В ручном аудите видны фиксированные
+параметры эпизода; отдельную находку можно удалить, не очищая остальные. Начало нового
+эпизода блокируется, пока текущий активен или выполняется запрос; после завершения либо
+истечения времени можно начать заново. Старые поля и черновик сбрасываются. Таймер
+не объявляет каждую секунду экранному диктору. Поздний ответ сравнения при изменившихся
+параметрах отбрасывается; параметры основного прогона блокируются на время выполнения.
+
+Проверки: make check — 181 тест, 176 passed / 5 local skips (Docker и bind HTTP).
+Четыре JS проходят syntax checks. scripts/check_ui_interactions.cjs проверяет задержанный
+ответ сравнения, двойной start, блокировку start во время step, удаление одной находки
+из двух и точный submit остатка, очистку при новом эпизоде и восстановление после тайм-аута.
+Это событийные unit checks с подменой сети, а не browser E2E; они включены в CI.
+
+Native Chrome: desktop hero, раскрытие справки, сохранённое сравнение, evidence graph
+и переход к записи, Escape; mobile emulation 320px — hero, 400px — заголовки/форма.
+Наложений в просмотренных областях не обнаружено. DevTools закрыт, desktop восстановлен.
+Ручной live UI и загрузка отчёта в этом проходе визуально не проверялись; API проверяет CI.
+Последний прежний gray-screen blocker не воспроизвёлся. Точный Helvetica Now Display
+потребует предоставленных файлов и новой проверки; текущий QA относится к fallback.

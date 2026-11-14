@@ -178,6 +178,7 @@
     const seed = Number($("seed").value);
     if (!Number.isInteger(seed) || seed < 0 || seed > 2147483647) { $("run-error").textContent = "Введите целый seed от 0 до 2147483647."; $("run-error").hidden = false; return; }
     $("run-button").disabled = true; $("results").setAttribute("aria-busy", "true"); $("run-form").classList.add("is-running"); $("run-button-text").textContent = "Идёт сверка";
+    for (const id of ["scenario", "policy", "seed"]) $(id).disabled = true;
     const controller = new AbortController(); const timeout = setTimeout(() => controller.abort(), 15000);
     try {
       const response = await fetch("api/run", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({seed,scenario,policy:$("policy").value}), signal:controller.signal});
@@ -185,7 +186,7 @@
       render(await response.json(), false); selectTab($("tab-findings"));
     } catch (error) {
       $("run-error").textContent = error.name === "AbortError" ? "Сервер не ответил вовремя. Предыдущий результат сохранён." : error.message || "Сервер недоступен. Предыдущий результат сохранён."; $("run-error").hidden = false;
-    } finally { clearTimeout(timeout); $("run-button").disabled = false; $("results").setAttribute("aria-busy", "false"); $("run-form").classList.remove("is-running"); $("run-button-text").textContent = "Запустить аудит"; }
+    } finally { for (const id of ["scenario", "policy", "seed"]) $(id).disabled = false; clearTimeout(timeout); $("run-button").disabled = false; $("results").setAttribute("aria-busy", "false"); $("run-form").classList.remove("is-running"); $("run-button-text").textContent = "Запустить аудит"; }
   });
   recordedMode();
   for (const id of ["scenario", "policy", "seed"]) {

@@ -151,3 +151,17 @@ collect-trajectories читает 10 сохранённых train-эпизодо
 ## Четыре дополнительные функции
 
 interactive.py: три сравниваемые политики и bounded manual sessions (8/75s cleanup, evaluation rewards, 100 steps/60s, per-session lock). extras.js: граф явных ссылок, таблица сравнения, ручные инструменты/находки/JSON и автономный HTML-отчёт. Источники не читают private через UI. comparisons.js генерируется из настоящих сравнений, source/wheel включают новые ассеты. API retains Host/Origin,4KiB, only manual/step64KiB. Пять новых тестов проходят, полный набор181:176 passed,5 local skips; JS syntax OK. Визуальный QA новых элементов ограничен серым native Chrome screenshot; HTTP/API и CI проверяются отдельно. Финальная публикация ещё проверяется.
+
+
+Final interactive UI: commit b2023b7787db610d9637f1edd06c7772707b13e8, CI https://github.com/larl9n/genesis-hackaton/actions/runs/43601403425 success (both jobs). 181 tests + actual HTTP comparison/manual flow, JS syntax, offline wheel/source and Docker corpus checks passed. Local verified package: dist/release-v0.6.0-interactive. Native Chrome new-feature visual QA remains unconfirmed (gray screenshot). Engine 0.6.0; origin/main fetched; protected local HEAD/index remain old. No further optional blocks: preserve user remaining quota.
+
+
+## Helvetica и завершение интерфейса — 14 ноября
+
+Новый заказ пользователя: heavy Helvetica Now Display и полезные завершения UI.
+Файлов пока нет, что пользователь подтвердил; local faces + fallback описаны явно.
+Реализованы metric guide, удаление одной находки, session lifecycle guards и stale
+comparison guard, блокировка параметров основного прогона. 181 Python тест прошёл
+(5 ожидаемых local skips); четыре JS syntax и событийная регрессия прошли.
+Desktop/320px/400px Chrome проверены в пределах docs/UI.md; live manual E2E не заявляется.
+Публикация и финальный CI проверяются отдельно. Финансовый движок остаётся 0.6.0.

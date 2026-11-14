@@ -44,7 +44,21 @@ A near-black technical atelier with warm sand annotations, soft grotesk headline
 | Soft white | `#f3f3f3` | `--color-heading` | text | Headlines, labels and dark-button text. |
 | Control white | `#ffffff` | `--color-white` | surface, link | Primary control base and footer links. |
 
-## Typography
+## Project typography override — 14 November 2026
+
+The user's latest direction overrides the original regular Aeonik recipes below for this project:
+Helvetica Now Display for prose, navigation, and headings; hero weight 900, other headings 700,
+tracking approximately −0.035em to −0.055em, heading line-height 1–1.08. Body and navigation
+remain weight 400 with readable body leading. Technical IDs, JSON, and operational annotations
+retain monospace. Rails, colors, dot sculpture, and silver controls remain as specified.
+
+The user confirmed that font files are not available yet. CSS uses local Regular/Bold/Black
+faces, then Helvetica Neue/Helvetica/Arial fallbacks. This is not bundled Helvetica Now Display
+and does not promise identical type on other devices. When licensed webfont files are supplied,
+add the corresponding same-origin WOFF2 sources and explicit static routes; verify Cyrillic,
+all three weights, mobile wrapping, and the packaged wheel. Do not fetch arbitrary font copies.
+
+## Typography (original reference)
 
 - **Aeonik** — All prose, headings and project names. Clean geometric grotesk, rounded bowls and open proportions, almost entirely regular weight. If unavailable, use **Inter**. Use weight 400 and preserve tight headline tracking. Font stack: "Aeonik", "Inter", sans-serif.
 - **Input** — Navigation, action labels, section markers and technical captions. Pragmatic monospaced lettering with a lightly engineered texture. If unavailable, use **IBM Plex Mono**. Use regular 400; retain compact sizes and uppercase labels. Font stack: "Input", "IBM Plex Mono", Arial, sans-serif.
