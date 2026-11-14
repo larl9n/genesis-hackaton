@@ -115,3 +115,28 @@ Native Chrome: desktop hero, раскрытие справки, сохранён
 Ручной live UI и загрузка отчёта в этом проходе визуально не проверялись; API проверяет CI.
 Последний прежний gray-screen blocker не воспроизвёлся. Точный Helvetica Now Display
 потребует предоставленных файлов и новой проверки; текущий QA относится к fallback.
+
+
+Итог ревизии: опубликован commit 9059762d2a743b7228957ac49c0dc3137329fcff,
+CI https://github.com/larl9n/genesis-hackaton/actions/runs/43611015843 — success обеих jobs.
+Подтверждены 181 Python тест (HTTP в CI, Docker отдельно), JS syntax/event regressions,
+воспроизводимые source/wheel и clean offline install, Docker corpus/replay. Локальный
+комплект dist/release-v0.6.0-typography также прошёл полный offline verifier.
+Source SHA256 4fbf8aaa8edb484659629dddb022fe6216978fe59f13fca575a4fb79ce21d94c;
+wheel SHA256 b321f95dcfdc4bee7408c09bad5d47a982970de415fb16b60a66c0162d948423.
+84 HTML IDs/ссылки проверены; все файлы совпали с remote Git blobs перед этой итоговой
+локальной записью. origin/main обновлён fetch; защищённые HEAD/index остаются прежними.
+Файлов Helvetica Now Display нет; используется local/fallback. Дальнейших работ без
+нового запроса не начато. Эта итоговая запись локальная, после проверенной публикации.
+
+
+## Inter 4.1: встроенный шрифт
+
+Пользователь предоставил Inter-4.1.zip. Из него без изменений скопированы
+web/InterVariable.woff2 и LICENSE.txt (как Inter-LICENSE.txt) в static/. Inter локально
+подключён через @font-face 100–900 с font-display:swap и optical sizing auto; preload
+ускоряет загрузку. Hero 900, заголовки 700, текст/навигация 400. Кириллица входит в файл.
+Сервер отдаёт только два явно разрешённых новых ассета с font/woff2 и text/plain.
+Файлы попадают в source и wheel через существующий static/*; установка в ОС не нужна.
+Ранее описанный Helvetica fallback заменён. Автономный HTML-отчёт пока сохраняет свой
+системный stack и не встраивает новый бинарный шрифт.

@@ -44,7 +44,14 @@ A near-black technical atelier with warm sand annotations, soft grotesk headline
 | Soft white | `#f3f3f3` | `--color-heading` | text | Headlines, labels and dark-button text. |
 | Control white | `#ffffff` | `--color-white` | surface, link | Primary control base and footer links. |
 
-## Project typography override — 14 November 2026
+## Current font — Inter 4.1
+
+The user supplied Inter-4.1.zip and selected Inter as the free replacement. The project
+bundles web/InterVariable.woff2 unchanged, with its SIL OFL license. Inter replaces the
+Helvetica stack below; retain hero 900, headings 700, body/navigation 400, tight tracking,
+and existing rails/colors. Optical sizing is automatic. No system installation is needed.
+
+## Earlier project typography override — 14 November 2026
 
 The user's latest direction overrides the original regular Aeonik recipes below for this project:
 Helvetica Now Display for prose, navigation, and headings; hero weight 900, other headings 700,

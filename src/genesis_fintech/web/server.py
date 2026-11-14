@@ -12,7 +12,9 @@ from .app import run_view
 from .interactive import MANUAL, compare_view
 
 STATIC = Path(__file__).parent / "static"
-ASSETS = {"/": ("index.html", "text/html; charset=utf-8"),
+ASSETS = {"/InterVariable.woff2": ("InterVariable.woff2", "font/woff2"),
+          "/Inter-LICENSE.txt": ("Inter-LICENSE.txt", "text/plain; charset=utf-8"),
+          "/": ("index.html", "text/html; charset=utf-8"),
           "/index.html": ("index.html", "text/html; charset=utf-8"),
           "/styles.css": ("styles.css", "text/css; charset=utf-8"),
           "/app.js": ("app.js", "text/javascript; charset=utf-8"),

@@ -1,5 +1,14 @@
 # Состояние проекта для продолжения
 
+## Актуальное поручение: Inter из пользовательского архива
+
+Пользователь выбрал бесплатную замену и положил Inter-4.1.zip в корень проекта.
+Встроен оригинальный web/InterVariable.woff2 (100–900) с Inter-LICENSE.txt, SIL OFL.
+Hero900 / headings700 / body/nav400, optical sizing auto, local preload; установка
+в ОС не нужна. Два точных static маршрута, ассеты включены в source/wheel.
+Архив пользователя не удалять и не публиковать целиком. Результаты проверок ниже.
+Новый выбор Inter имеет приоритет над прежним ожиданием Helvetica Now Display.
+
 ## Последнее поручение: завершение UI и Helvetica Now Display
 
 Новое указание пользователя имеет приоритет над прежней остановкой ради квоты: дополнить
@@ -12,8 +21,20 @@ heavy hero/заголовки, Regular текст/навигация, адапт
 блокировка параметров основного прогона. Событийные JS-регрессии включены в CI.
 Локально 181 Python тест (176 passed/5 skips) и JS event checks прошли. Chrome: desktop
 hero/справка/сравнение/граф-переход к записи; 320px hero и 400px форма просмотрены.
-Live manual browser E2E не проверялся; шрифтовой QA — с fallback. Ожидается результат
-публикации/CI этой ревизии. Engine остаётся 0.6.0; core/API/корпус не менялись.
+Live manual browser E2E не проверялся; шрифтовой QA — с fallback. Публикация и CI этой ревизии успешны (итог ниже). Engine остаётся 0.6.0; core/API/корпус не менялись.
+
+
+Итог ревизии: опубликован commit 9059762d2a743b7228957ac49c0dc3137329fcff,
+CI https://github.com/larl9n/genesis-hackaton/actions/runs/43611015843 — success обеих jobs.
+Подтверждены 181 Python тест (HTTP в CI, Docker отдельно), JS syntax/event regressions,
+воспроизводимые source/wheel и clean offline install, Docker corpus/replay. Локальный
+комплект dist/release-v0.6.0-typography также прошёл полный offline verifier.
+Source SHA256 4fbf8aaa8edb484659629dddb022fe6216978fe59f13fca575a4fb79ce21d94c;
+wheel SHA256 b321f95dcfdc4bee7408c09bad5d47a982970de415fb16b60a66c0162d948423.
+84 HTML IDs/ссылки проверены; все файлы совпали с remote Git blobs перед этой итоговой
+локальной записью. origin/main обновлён fetch; защищённые HEAD/index остаются прежними.
+Файлов Helvetica Now Display нет; используется local/fallback. Дальнейших работ без
+нового запроса не начато. Эта итоговая запись локальная, после проверенной публикации.
 
 ## Предыдущая проверенная ревизия
 
