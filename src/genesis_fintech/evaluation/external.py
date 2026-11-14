@@ -100,10 +100,11 @@ class WorkerChannel:
             self.process.stdout.close()
 
 
-def drive_worker(env, initial, command, *, cwd, child_env, deadline):
+def drive_worker(env, initial, command, *, cwd, child_env, deadline, collect_resources=None):
     """Host-only primitive. command is trusted supervisor configuration, never an action."""
     observation, request_id, failure = initial, 0, None
     channel = WorkerChannel(command, cwd=cwd, env=child_env)
+    resources = None
     try:
         while True:
             action = channel.exchange(observation, request_id, deadline)
@@ -116,10 +117,43 @@ def drive_worker(env, initial, command, *, cwd, child_env, deadline):
                    WorkerExit: "worker_exit"}[type(exc)]
         env.abort_worker(failure)
     finally:
-        channel.close()
+        try:
+            if collect_resources is not None:
+                resources = collect_resources()
+        finally:
+            channel.close()
     return {"metrics": env.evaluation_result(), "failure": failure,
+            "worker_resources": resources,
             "terminated": env.trajectory[-1]["terminated"], "truncated": env.trajectory[-1]["truncated"],
             "steps": sum(item["action"] is not None for item in env.trajectory)}
+
+
+def docker_resources(name):
+    """Read kernel cgroup-v2 counters before cleanup; never accept worker claims.
+
+    The fixed reader runs as the same unprivileged UID and contributes to the
+    measured peak itself. No mounts or extra capabilities are granted.
+    """
+    script = """import json
+from pathlib import Path
+p=Path('/sys/fs/cgroup')
+cpu=dict(line.split() for line in (p/'cpu.stat').read_text().splitlines())
+events=dict(line.split() for line in (p/'memory.events').read_text().splitlines())
+print(json.dumps(dict(peak_memory_bytes=int((p/'memory.peak').read_text()),
+ memory_limit_bytes=int((p/'memory.max').read_text()),cpu_usage_usec=int(cpu['usage_usec']),
+ oom_kills=int(events['oom_kill']))))
+"""
+    try:
+        result = subprocess.run(["docker", "exec", "--user", "65534:65534", name,
+                                 "python", "-I", "-S", "-c", script],
+                                capture_output=True, timeout=5, check=True)
+        data = json.loads(result.stdout)
+        required = {"peak_memory_bytes", "memory_limit_bytes", "cpu_usage_usec", "oom_kills"}
+        if set(data) != required or any(type(value) is not int or value < 0 for value in data.values()):
+            raise ValueError("invalid counters")
+        return {"measured": True, "source": "cgroup_v2_including_counter_reader", **data}
+    except (subprocess.SubprocessError, ValueError, OSError) as exc:
+        return {"measured": False, "reason": type(exc).__name__}
 
 
 def docker_image_id(image):
@@ -207,7 +241,9 @@ def _run_loaded(public, truth, output, command, cwd, child_env, image_id,
     initial, _ = env.reset_episode(public, truth)
     started = time.monotonic()
     result = drive_worker(env, initial, command, cwd=cwd, child_env=child_env,
-                          deadline=started + wall_time_seconds)
+                          deadline=started + wall_time_seconds,
+                          collect_resources=(lambda: docker_resources(command[command.index("--name")+1]))
+                          if backend == "docker" else None)
     result.update(version=__version__, protocol_version=1, policy=policy,
                   policy_seed=policy_seed, backend=backend, worker_image_id=image_id,
                   security_mode="docker_container" if backend == "docker" else "development_subprocess",

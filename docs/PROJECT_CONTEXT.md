@@ -1,6 +1,6 @@
 # Состояние проекта для продолжения
 
-Обновлено: 14 ноября 2026 года. Engine — **0.4.0** с frozen corpus/evaluator. Последняя локальная проверка: 166 тестов, 161 passed, 5 local skipped. Блок A завершён, B проходит дополнительный Docker corpus-run в CI. Сайт отложен. Последующие указания пользователя имеют приоритет над этим файлом.
+Обновлено: 14 ноября 2026 года. Engine — **0.4.0** с frozen corpus/evaluator. Последняя локальная проверка: 166 тестов, 161 passed, 5 local skipped. Блоки A/B опубликованы и прошли Docker corpus-run в CI. Блок C: измерение cgroup ресурсов проходит проверку. Сайт отложен. Последующие указания пользователя имеют приоритет над этим файлом.
 
 ## Проект и требования
 
@@ -26,7 +26,7 @@
 ## Что работает
 
 - Блок A: `generation/datasets.py`, configs/dataset.json, 10 train + 10 dev, раздельные seed и новые параметры dev; 4 чистые компании, 72 метки. Public-only архив datasets/public-v1.tar.gz и публичный index готовы к публикации; private корпус в artifacts/public-corpus-v1. Строгие hashes/размеры/покрытие, независимый truth-check, replay, no-overwrite, symlink/path rejection. 7 тестов проходят, полная повторная проверка: 161 найден, 156 passed, 5 local skips. Исправлено tuple/list сравнение provenance после JSON round-trip. См. DATASETS.md.
-- Блок B в работе: evaluate-dataset читает сохранённые записи, запускает 3 внешние политики + evaluator-only oracle, пересчитывает отправки с диска, проверяет 20 ID/order grader-пар и опционально 80 точных повторов. Development 80+80 прогонов прошёл: reconciliation/oracle TP72/FP0/FN0. Настоящий Docker corpus-run включён в Linux CI; до его результата не считать блок завершённым. См. CONFORMANCE.md.
+- Блок B завершён: evaluate-dataset читает сохранённые записи, запускает 3 внешние политики + evaluator-only oracle, пересчитывает отправки с диска, проверяет 20 ID/order grader-пар и опционально 80 точных повторов. Development 80+80 прогонов прошёл: reconciliation/oracle TP72/FP0/FN0. Настоящий Docker corpus-run и повторы прошли в Linux CI 43588068060 (commit 33b3bc34fac88730fb638024b54dc838766c59fd). См. CONFORMANCE.md.
 
 - `web/`: локальная презентация и демо-панель без Node/npm/frameworks. CLI `serve --port 8765`, loopback-only stdlib HTTP. 3 сценария × 3 обычные политики, seed 0..2147483647, настоящие метрики/находки/observed evidence/траектория и JSON-export. Только доверенные in-process политики, не Docker и не обучение модели. Ни truth/provenance, ни произвольные пути/команды через UI не доступны.
 - `web/static/`: стили по дизайн-ТЗ, SVG из 6063 детерминированных точек, dark laboratory и light evidence board, tabs/dialog/reduced-motion/адаптивные CSS. При открытии index.html как файла — явно помеченные записи seed42; seed/policy заблокированы, scenario меняет записанный пример. `scripts/build_ui_samples.py` воспроизводит реальные view-модели, тест сверяет их с движком. Для новых seed нужен serve. Все ассеты локальные; шрифты используют заявленные font stacks с системным fallback.
@@ -54,8 +54,8 @@
 
 - В 0.4.0 реализованы и проверены в Linux CI JSON-line IPC, worker и Docker-backend: без host mounts/сети, read-only root, UID65534, cap-drop/no-new-privileges, CPU/RAM/PID/FD/tmpfs-лимиты, cleanup. Docker обязателен по умолчанию, fallback нет. Локально Docker отсутствует, sandbox-exec запрещён средой. Development subprocess и прежние demo/benchmark не являются OS-sandbox. Контейнеры доверяют ядру/движку; это не microVM. Образ пока собирается с Python-тега, pin digest остаётся для упаковки.
 - Политики и development failure analysis работают, но это узкие правила для синтетической модели, без LLM и обучения. Счета в иностранной валюте, multi-invoice receipts и новые ошибки не входят в проверенный охват reconciliation. Oracle не является независимым агентом.
-- Наборы 10 train + 10 dev, итоговый независимый conformance harness и упаковка ещё не подготовлены. Наши тесты нельзя называть официальным стендом организаторов.
-- Лицензия не выбрана. Lockfile нет, setuptools задан диапазоном. Счета в иностранной валюте, нераспределённые поступления и переоценка валютных остатков не моделируются; это ограниченный синтетический мир.
+- Наборы 10 train + 10 dev и независимый conformance harness готовы; упаковка ещё впереди. Наши тесты нельзя называть официальным стендом организаторов.
+- Пользователь выбрал MIT; файл будет добавлен при упаковке. Lockfile нет, setuptools задан диапазоном. Счета в иностранной валюте, нераспределённые поступления и переоценка валютных остатков не моделируются; это ограниченный синтетический мир.
 
 ## Конфиги и точные определения
 

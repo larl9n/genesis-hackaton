@@ -111,3 +111,13 @@ PYTHONPATH=src .venv/bin/python -m genesis_fintech benchmark --output artifacts/
 ```
 
 50 эпизодов × 4 политики = 200 прогонов, 140 меток, 10 чистых компаний. Reconciliation и oracle: TP=140, FP=0, FN=0. Random: TP=0, FP=200, FN=140. Flag-all: TP=22, FP=1478, FN=118. Пагинация позволяет reconciliation тратить в среднем 11.6 шага, oracle с отдельными запросами — 12.2; это объясняет небольшую разницу награды при одинаковом F1. Измеренные результаты, причины ошибок и ограничения — [BASELINES.md](BASELINES.md). Полный report и 200 JSONL-траекторий хранятся локально в artifacts и не публикуются.
+
+## Блоки A/B: замороженный корпус и независимый прогон
+
+10 train + 10 dev, четыре чистые компании, 72 метки. Public-only архив SHA-256 `408c1cef6dc2257879d4b441f046642d0de1553c570129207401e83c68984e50`. Проверены hashes, независимый эталон, версии, размеры и воспроизведение. Исправлено сравнение tuple/list provenance после JSON round-trip.
+
+166 локальных тестов: 161 passed, 5 skips (4 Docker и 1 HTTP из-за ограничений хоста). [Linux CI 43588068060](https://github.com/larl9n/genesis-hackaton/actions/runs/43588068060) прошёл обычную проверку, четыре Docker-интеграции и полный corpus-run: 80 прогонов + 80 точных повторов + 20 ID/order grader-пар. Reconciliation и evaluator-only oracle: TP72/FP0/FN0; все четыре чистые компании без ложных тревог. Random TP0/FP80/FN72; flag-all TP8/FP592/FN64. Это публичный синтетический корпус, не hidden test и не официальный стенд.
+
+## Блок C: ресурсы
+
+Добавлено чтение memory.peak, memory.max, cpu.stat и memory.events cgroup v2 до завершения worker. Доверенный фиксированный reader включён в измеренный пик, работает под UID65534 и не получает новых mounts/capabilities. Оценщик требует измерения для каждого Docker-прогона, проверяет отсутствие OOM и предел 512 MiB / 60 секунд. RSS supervisor/CLI и cgroup peak worker записываются отдельно; Docker daemon и ядро не входят в измерение. Полный лимит физического хоста 2 CPU / 4 GB этим не сертифицируется. Ожидается отдельная реальная проверка CI.

@@ -44,3 +44,5 @@ jobs:
         env:
           PYTHONPATH: src
         run: python -m genesis_fintech evaluate-dataset artifacts/ci-corpus --output artifacts/ci-evaluation --replay
+      - name: Print measured application resources
+        run: python -c 'import json; print(json.dumps(json.load(open("artifacts/ci-evaluation/report.json"))["resources"], indent=2))'

@@ -53,6 +53,12 @@ def _check_run(result, trace, public, truth):
     if (result["truncated"] or not result["terminated"] or result["failure"]
             or not result["metrics"]["valid_submission"] or not 1 <= result["steps"] <= 100):
         raise DataError("suite: policy violated execution contract")
+    if result.get("backend") == "docker":
+        counters = result.get("worker_resources") or {}
+        if (not counters.get("measured") or counters["oom_kills"]
+                or not 0 < counters["peak_memory_bytes"] <= counters["memory_limit_bytes"] == 512*1024*1024
+                or result["elapsed_seconds"] > 60):
+            raise DataError("suite: missing counters or worker resource budget exceeded")
     for item in trace:
         if item["reward"] != 0 or item["observation"].get("error"):
             raise DataError("suite: reward exposure or invalid tool request")
@@ -169,7 +175,10 @@ def evaluate_dataset(directory, output, *, backend="docker", image=DEFAULT_IMAGE
                             "supervisor_peak_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*rss_unit,
                             "child_cli_peak_rss_bytes": resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss*rss_unit,
                             "worker_memory_limit_bytes": 512*1024*1024 if backend == "docker" else None,
-                            "measurement_scope": "Process RSS peaks are separate, not measured total memory incl. daemon/kernel."}}
+                            "max_worker_peak_memory_bytes": max((run["worker_resources"]["peak_memory_bytes"]
+                                for run in runs if (run.get("worker_resources") or {}).get("measured")), default=None),
+                            "worker_counter_checks": sum(bool((run.get("worker_resources") or {}).get("measured")) for run in runs),
+                            "measurement_scope": "Supervisor/CLI RSS peaks and worker cgroup peaks are separate. Counter reader included; Docker daemon/kernel excluded. Not a total-system hardware certification."}}
     checks = {"dataset_integrity": True, "persisted_score_checks": len(runs), "execution_contract_checks": len(runs),
               "observation_privacy_checks": len(runs), "paired_id_order_checks": paired,
               "replay_checks": len(runs) if replay else 0, "oracle_ceiling": True, "flag_all_penalized": True,

@@ -72,6 +72,13 @@ print(json.dumps(result))'''
             self.assertEqual((result['metrics']['tp'], result['metrics']['fp'], result['metrics']['fn']), (4,0,0))
             self.assertEqual(result['security_mode'],'docker_container')
             self.assertEqual(result['worker_image_id'],self.image_id)
+            counters = result['worker_resources']
+            self.assertTrue(counters['measured'], counters)
+            self.assertGreater(counters['peak_memory_bytes'], 0)
+            self.assertLessEqual(counters['peak_memory_bytes'], 512*1024*1024)
+            self.assertEqual(counters['memory_limit_bytes'], 512*1024*1024)
+            self.assertGreater(counters['cpu_usage_usec'], 0)
+            self.assertEqual(counters['oom_kills'], 0)
             trace = [json.loads(line) for line in (Path(cwd)/'run/trajectories.jsonl').read_text().splitlines()]
             self.assertTrue(all(item['reward']==0 for item in trace))
             self.assertLessEqual(result['steps'],100)

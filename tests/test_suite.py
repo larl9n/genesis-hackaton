@@ -85,5 +85,21 @@ class SuiteTests(unittest.TestCase):
         self.assertEqual(result.returncode,0,result.stdout+result.stderr)
         self.assertEqual(json.loads(result.stdout)['policy_runs'],80)
 
+    def test_docker_resource_gate_rejects_missing_oom_or_excessive_counters(self):
+        from copy import deepcopy
+        from genesis_fintech.evaluation.suite import _check_run, _read_trace
+        report=read_json(self.output/'report.json')
+        run=next(row for row in report['runs'] if row['policy']=='reconciliation')
+        public,truth=load_scenario(self.corpus/'episodes'/run['split']/run['episode_id'])
+        trace=_read_trace(self.output/'runs'/run['split']/run['episode_id']/run['policy']/'trajectories.jsonl')
+        run=deepcopy(run);run['backend']='docker'
+        counters=dict(measured=True,peak_memory_bytes=20_000_000,memory_limit_bytes=512*1024*1024,cpu_usage_usec=1000,oom_kills=0)
+        run['worker_resources']=counters
+        _check_run(run,trace,public,truth)
+        for changed in [None,{**counters,'measured':False},{**counters,'oom_kills':1},
+                        {**counters,'peak_memory_bytes':1024**3}]:
+            run['worker_resources']=changed
+            with self.assertRaisesRegex(DataError,'resource budget'):_check_run(run,trace,public,truth)
+
 
 if __name__=='__main__':unittest.main()
