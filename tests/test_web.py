@@ -110,6 +110,16 @@ class LiveHTTPTests(unittest.TestCase):
             self.assertEqual(result.status,200)
             self.assertEqual(json.loads(result.read())['metrics']['fp'],0)
             connection.close()
+            def post(path,payload):
+                connection=http.client.HTTPConnection('127.0.0.1',port,timeout=5)
+                connection.request('POST',path,body=json.dumps(payload),headers={'Origin':f'http://127.0.0.1:{port}','Content-Type':'application/json'})
+                response=connection.getresponse();self.assertEqual(response.status,200)
+                value=json.loads(response.read());connection.close();return value
+            comparison=post('/api/compare',{'seed':44,'scenario':'clean'})
+            self.assertEqual(len(comparison['runs']),3)
+            manual=post('/api/manual/start',{'seed':44,'scenario':'clean'})
+            answer=post('/api/manual/step',{'session':manual['session'],'action':{'action':'submit','params':{'episode_id':manual['observation']['manifest']['episode_id'],'findings':[]}}})
+            self.assertTrue(answer['terminated']);self.assertEqual(answer['metrics']['f1'],1)
         finally:
             server.shutdown();server.server_close();thread.join(timeout=5)
 

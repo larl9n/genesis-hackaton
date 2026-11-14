@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 from genesis_fintech.web.app import run_view
+from genesis_fintech.web.interactive import compare_view
 
 
 if __name__ == "__main__":
@@ -19,3 +20,7 @@ if __name__ == "__main__":
         encoding="utf-8",
     )
     print(f"Recorded {len(samples)} actual engine runs: {destination}")
+    comparisons = {name: compare_view({"seed": 42, "scenario": name}) for name in samples}
+    destination.with_name("comparisons.js").write_text(
+        "/* Recorded comparisons: same synthetic episode, seed 42; not live runs. */\nwindow.GENESIS_COMPARISONS = "
+        + json.dumps(comparisons, ensure_ascii=False, separators=(",", ":"))+";\n", encoding="utf-8")

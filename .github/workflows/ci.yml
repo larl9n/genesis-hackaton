@@ -19,6 +19,8 @@ jobs:
         run: |
           node --check src/genesis_fintech/web/static/app.js
           node --check src/genesis_fintech/web/static/samples.js
+          node --check src/genesis_fintech/web/static/extras.js
+          node --check src/genesis_fintech/web/static/comparisons.js
       - name: Prepare locked build dependency
         run: |
           python -m pip install --only-binary=:all: --no-deps --require-hashes -r requirements-build.lock

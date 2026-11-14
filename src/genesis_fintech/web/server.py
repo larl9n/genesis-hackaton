@@ -9,12 +9,15 @@ from genesis_fintech import __version__
 from genesis_fintech.domain.models import integer
 from genesis_fintech.generation.storage import parse_json
 from .app import run_view
+from .interactive import MANUAL, compare_view
 
 STATIC = Path(__file__).parent / "static"
 ASSETS = {"/": ("index.html", "text/html; charset=utf-8"),
           "/index.html": ("index.html", "text/html; charset=utf-8"),
           "/styles.css": ("styles.css", "text/css; charset=utf-8"),
           "/app.js": ("app.js", "text/javascript; charset=utf-8"),
+          "/extras.js": ("extras.js", "text/javascript; charset=utf-8"),
+          "/comparisons.js": ("comparisons.js", "text/javascript; charset=utf-8"),
           "/samples.js": ("samples.js", "text/javascript; charset=utf-8"),
           "/sculpture.svg": ("sculpture.svg", "image/svg+xml"),
           "/favicon.svg": ("favicon.svg", "image/svg+xml")}
@@ -31,15 +34,17 @@ def response(method, path, headers, body, port):
     if method == "GET" and path in ASSETS:
         filename, content_type = ASSETS[path]
         return 200, content_type, (STATIC / filename).read_bytes()
-    if method == "POST" and path == "/api/run":
+    routes = {"/api/run": run_view, "/api/compare": compare_view,
+              "/api/manual/start": MANUAL.start, "/api/manual/step": MANUAL.step}
+    if method == "POST" and path in routes:
         if headers.get("Origin") not in {"http://" + host for host in allowed}:
             return 403, "application/json", b'{"error":"origin_not_allowed"}'
         if headers.get("Content-Type", "").split(";")[0] != "application/json":
             return 415, "application/json", b'{"error":"json_required"}'
-        if len(body) > 4096:
+        if len(body) > (65536 if path == "/api/manual/step" else 4096):
             return 413, "application/json", b'{"error":"request_too_large"}'
         try:
-            result = run_view(parse_json(body.decode("utf-8")))
+            result = routes[path](parse_json(body.decode("utf-8")))
         except (ValueError, TypeError, UnicodeError, RecursionError):
             return 400, "application/json", b'{"error":"invalid_parameters"}'
         return 200, "application/json; charset=utf-8", json.dumps(result, ensure_ascii=False, allow_nan=False).encode()
@@ -69,7 +74,8 @@ class Handler(BaseHTTPRequestHandler):
     def _handle(self, method):
         self.connection.settimeout(5)
         length = self.headers.get("Content-Length", "0")
-        if not length.isdecimal() or len(length) > 5 or int(length) > 4096:
+        maximum = 65536 if self.path == "/api/manual/step" else 4096
+        if not length.isdecimal() or len(length) > 5 or int(length) > maximum:
             self._send(413, "application/json", b'{"error":"request_too_large"}')
             return
         body = self.rfile.read(int(length))

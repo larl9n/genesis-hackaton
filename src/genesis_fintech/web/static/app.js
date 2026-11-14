@@ -79,6 +79,7 @@
       details.append(summary, content); container.append(details);
     });
     openDialog($("evidence-dialog"), trigger);
+    document.dispatchEvent(new CustomEvent("genesis:evidence", {detail:{finding, container}}));
   }
 
   function proofBoard() {
@@ -137,6 +138,7 @@
     });
     proofBoard();
     $("result-announcement").textContent = `Прогон завершён. Найдено: ${result.metrics.tp}, пропущено: ${result.metrics.fn}, ложных тревог: ${result.metrics.fp}.`;
+    document.dispatchEvent(new CustomEvent("genesis:result", {detail:{result,recorded}}));
   }
 
   function selectTab(tab) {

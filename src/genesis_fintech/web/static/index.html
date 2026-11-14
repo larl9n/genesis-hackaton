@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="styles.css">
   <script src="samples.js" defer></script>
   <script src="app.js" defer></script>
+  <script src="comparisons.js" defer></script>
+  <script src="extras.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#lab">Перейти к среде</a>
@@ -68,6 +70,28 @@
           <div class="console-bottom"><span><i class="status-dot"></i>ТОЛЬКО СИНТЕТИЧЕСКИЕ ДАННЫЕ</span><span id="result-announcement" class="sr-only" role="status" aria-live="polite"></span><span>100 ШАГОВ MAX</span></div>
         </div>
       </div>
+    </section>
+
+    <section class="rail explore-section" aria-labelledby="explore-title">
+      <p class="eyebrow">// ИССЛЕДОВАТЕЛЬСКИЙ СТОЛ</p><h2 id="explore-title">Сравните. Исследуйте. Объясните.</h2>
+      <p class="lead">Сравните алгоритмы на выбранном эпизоде или проведите собственное расследование.</p>
+      <div class="explore-actions"><button class="key-secondary" id="compare-button" type="button">Сравнить три политики ↗</button><button class="key-secondary" id="report-button" type="button">Скачать отчёт HTML ↗</button></div>
+      <p id="extras-status" role="status" class="dialog-description"></p><div id="comparison-result"></div>
+      <details class="manual-panel"><summary>Ручной аудит · исследовать документы самостоятельно</summary>
+        <p class="dialog-description">На локальном сервере: 100 действий и 60 секунд с начала эпизода. Награда и оценка появятся после отправки. Воздержание — допустимый ответ.</p>
+        <button id="manual-start" class="key-secondary" type="button">Начать ручной эпизод ↗</button>
+        <div id="manual-workspace" hidden><p id="manual-budget" role="status"></p>
+          <div class="manual-tools"><label>Таблица<select id="manual-table"><option value="invoices">Счета</option><option value="payments">Платежи</option><option value="ledger">Проводки</option><option value="fx">Курсы</option></select></label><button id="manual-list" class="key-secondary" type="button">Получить записи</button><button id="manual-next" class="key-secondary" type="button" disabled>Следующая страница</button></div>
+          <div id="manual-records"></div>
+          <div class="manual-tools"><label>ID записи или документа<input id="manual-record-id" maxlength="128"></label><button id="manual-fetch" class="key-secondary" type="button">Запись по ID</button><button id="manual-document" class="key-secondary" type="button">Документ по ID</button></div>
+          <label class="manual-calculator">Калькулятор<input id="manual-expression" maxlength="256" placeholder="20000 - 15000"><button id="manual-calculate" class="text-button" type="button">Вычислить</button></label><output id="manual-value"></output>
+          <form id="finding-builder" class="manual-builder"><h3>Добавить находку</h3>
+            <label>Тип<select id="manual-type"><option value="duplicate_invoice">Дубль счёта</option><option value="payment_allocation">Распределение платежа</option><option value="fx_mismatch">Валютное расхождение</option><option value="period_cutoff">Граница периода</option></select></label>
+            <label>Затронутые ID, через запятую<input id="manual-affected" required maxlength="2000"></label><label>Сумма в минимальных единицах<input id="manual-amount" type="number" min="0" max="9007199254740991" step="1" required></label><label>Валюта<input id="manual-currency" maxlength="3" value="KZT" required></label><label>ID доказательств, через запятую<input id="manual-evidence" maxlength="2000"></label><label>Обоснование<input id="manual-explanation" maxlength="1000"></label><button class="key-secondary" type="submit">Добавить в ответ</button>
+          </form><p id="manual-draft"></p><button id="manual-clear" class="text-button" type="button">Очистить находки</button><button id="manual-submit" class="key-secondary" type="button">Завершить и получить оценку ↗</button>
+          <pre id="manual-score" hidden></pre><button id="manual-export" class="text-button" type="button" hidden>Скачать свой аудит JSON ↗</button>
+        </div>
+      </details>
     </section>
 
     <section class="rail proof-section" aria-labelledby="proof-title">
