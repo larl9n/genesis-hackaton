@@ -6,9 +6,9 @@
 
 ## Статус
 
-**Версия 0.4.0: внешний worker и контейнерный backend.** Работают история с FX/возвратами/границами, четыре семейства ошибок и две композиции, независимая проверка, matching/reward, инструменты и политики. Добавлен JSON-line IPC с ограничениями размера/времени и отдельный процесс политики. Docker-backend по умолчанию ограничивает файлы, сеть и ресурсы и не переключается в небезопасный режим при ошибке. Контейнерная проверка выполняется отдельной job Linux CI; локальный режим development сам по себе OS-изоляцию не подтверждает. Дополнительно встроен локальный UI по Hyperstudio-дизайну: сценарии, метрики, доказательства и траектория. Train/dev-наборы и полный пакет сдачи — следующие этапы.
+**Версия 0.5.0 — кандидат для сдачи.** Работают четыре семейства ошибок, две композиции, независимая проверка, инструменты и четыре стратегии. Заморожены 10 train + 10 dev: три обычные политики оцениваются в Docker, oracle — только у оценщика. Встроенный UI остаётся дополнительной локальной демонстрацией. Добавлены измерения cgroup, MIT, фиксированные build-зависимости и воспроизводимая упаковка.
 
-Код опубликован в `main`; [CI версии 0.4.0](https://github.com/larl9n/genesis-hackaton/actions/runs/43570935768) прошёл: 142 обычные проверки и 4 реальные Linux/Docker-интеграции в отдельной job.
+[Linux CI корпуса и ресурсов](https://github.com/larl9n/genesis-hackaton/actions/runs/43588561164) прошёл: 80 прогонов, 80 повторов, 20 grader-пар и реальные проверки контейнерной изоляции. Финальная проверка пакета описана в [RELEASE.md](docs/RELEASE.md); успешность конкретной сборки смотрите по её commit в Actions.
 
 [Исходное ТЗ](https://docs.google.com/document/d/13a2pVl5LVU6_MW_FWE4KvjX_s7e-UPJvcSJuYjvCWoA) — черновик организаторов от 12 ноября 2026 года. Его лимиты и правила пока рассматриваем как проектные ориентиры. Дедлайн команды — до 20 ноября; сдаваемую версию готовим к 19 ноября.
 
@@ -47,7 +47,7 @@ PYTHONPATH=src python -m genesis_fintech evaluate-dataset artifacts/public-corpu
 
 ### Подготовить Python
 
-Целевая версия — **Python 3.11**. Runtime-зависимостей на этапе каркаса нет. Для новой копии репозитория установите Python 3.11 и создайте окружение:
+Целевая версия — **Python 3.11**. Runtime/test-зависимостей нет. Для новой копии репозитория установите Python 3.11 и создайте окружение:
 
 ```bash
 git clone https://github.com/larl9n/genesis-hackaton.git
@@ -111,12 +111,13 @@ PYTHONPATH=src python -m genesis_fintech score artifacts/demo-example --findings
 
 `findings.json` должен содержать `{episode_id, findings}` по [контракту](docs/ENVIRONMENT.md). `score` и `validate-scenario` читают private truth и не входят в набор инструментов политики.
 
-Python API: `from genesis_fintech.environment.core import AuditEnv`, затем `env.reset(seed, config)` и `env.step(action)`. В режиме `evaluation` шаги скрывают награду и диагностику; управляющий процесс получает итог через `evaluation_result()` после завершения. **Текущая реализация находится в одном процессе и не является защищённым held-out запуском.**
+Python API: `from genesis_fintech.environment.core import AuditEnv`, затем `env.reset(seed, config)` и `env.step(action)`. В режиме `evaluation` шаги скрывают награду и диагностику; управляющий процесс получает итог через `evaluation_result()` после завершения. Прямой Python API работает в одном процессе; для изолированного оценивания используйте `evaluate-dataset` с Docker.
 
 Опционально установить пакет вместе с CLI:
 
 ```bash
-python -m pip install -e .
+python -m pip install --require-hashes --only-binary=:all: --no-deps -r requirements-build.lock
+python -m pip install -e . --no-build-isolation --no-deps
 genesis-fintech doctor
 ```
 
@@ -137,7 +138,7 @@ PYTHONPATH=src python -m genesis_fintech benchmark --output artifacts/baseline-e
 ## Внешняя политика
 
 ```bash
-docker build -f docker/worker.Dockerfile -t genesis-audit-worker:0.4.0 .
+docker build -f docker/worker.Dockerfile -t genesis-audit-worker:0.5.0 .
 PYTHONPATH=src python -m genesis_fintech run-policy --seed 42 --config configs/interactions.json --output artifacts/container-example
 ```
 
@@ -189,8 +190,10 @@ python -m json.tool configs/default.json
 PYTHONPATH=src python -m unittest discover -s tests -v
 ```
 
-`make check PYTHON=python` проверяет CLI, предметную логику, IPC, компиляцию и пять JSON-конфигов: 149 тестов проходят локально; 4 Docker-интеграции и 1 настоящий HTTP-тест пропущены из-за ограничений текущей среды. В Linux CI отдельная job явно включает Docker-тесты; обычная job обязана выполнить настоящий HTTP-тест. Контейнерный набор ранее прошёл в CI версии 0.4.0. Проверены четыре семейства, 16 комбинаций, две композиции, ручные FX/cutoff и полный внешний эпизод. Это проверка выбранного контейнерного режима, не гарантия защиты от уязвимостей ядра или Docker.
+`make check PYTHON=python` проверяет CLI, предметную логику, IPC, корпус, упаковку и шесть JSON-конфигов. Docker-интеграции включаются отдельной Linux CI job; настоящий HTTP-тест обязателен в CI. На текущем локальном хосте они пропускаются из-за ограничений окружения. Результаты этапов — [CHECKPOINTS.md](docs/CHECKPOINTS.md).
+
+Сборка source/wheel, чистая offline-установка, перенос Docker image и `make evaluate` — [RELEASE.md](docs/RELEASE.md). Сценарий показа — [DEMO.md](docs/DEMO.md), область ресурсных замеров — [RESOURCES.md](docs/RESOURCES.md).
 
 ## Лицензия
 
-Лицензия ещё не выбрана. Перед сдачей нужно выбрать её и добавить файл `LICENSE` согласно требованиям кейса.
+[MIT](LICENSE), выбранная пользователем. Все включённые финансовые fixtures синтетические.

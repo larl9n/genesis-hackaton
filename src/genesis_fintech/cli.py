@@ -28,7 +28,7 @@ def main() -> int:
     suite.add_argument("directory")
     suite.add_argument("--output", required=True)
     suite.add_argument("--backend", choices=["docker", "development"], default="docker")
-    suite.add_argument("--image", default="genesis-audit-worker:0.4.0")
+    suite.add_argument("--image", default="genesis-audit-worker:0.5.0")
     suite.add_argument("--policy-seed", type=int, default=17)
     suite.add_argument("--replay", action="store_true")
     generate = commands.add_parser("generate-clean", help="Generate and independently check a clean company")
@@ -61,7 +61,7 @@ def main() -> int:
     external.add_argument("--policy", choices=["random", "flag-all", "reconciliation"], default="reconciliation")
     external.add_argument("--policy-seed", type=int, default=0)
     external.add_argument("--backend", choices=["docker", "development"], default="docker")
-    external.add_argument("--image", default="genesis-audit-worker:0.4.0")
+    external.add_argument("--image", default="genesis-audit-worker:0.5.0")
     external.add_argument("--wall-time", type=int, default=60)
     external.add_argument("--max-steps", type=int, default=100)
     args = parser.parse_args()
@@ -159,15 +159,16 @@ def main() -> int:
     print(json.dumps({
         "project": "genesis-fintech-env",
         "version": __version__,
-        "status": "frozen_corpus_evaluator",
+        "status": "submission_candidate",
         "implemented": ["project_info", "python_version_check", "interface_protocols", "public_record_validation",
                         "decimal_conversion", "clean_generation", "public_private_export", "independent_clean_checker",
                         "four_error_families", "fx_payment_history", "boundary_decoys", "interaction_scenarios",
                         "truth_validation", "reward_matching", "development_reset_step", "oracle_demo",
                         "observation_only_baselines", "baseline_benchmark", "development_failure_analysis",
                         "bounded_worker_ipc", "external_policy_runner", "docker_worker_backend", "local_audit_ui",
-                        "frozen_train_dev_datasets", "stored_episode_evaluation", "corpus_conformance_checks"],
-        "planned": ["submission_packaging"],
+                        "frozen_train_dev_datasets", "stored_episode_evaluation", "corpus_conformance_checks",
+                        "worker_cgroup_measurements", "reproducible_source_bundle", "offline_wheel_installation"],
+        "planned": [],
         "end_to_end_available": True,
         "security_mode": "development_in_process",
         "external_backends": ["docker", "development"],

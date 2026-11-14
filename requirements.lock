@@ -1,0 +1,2 @@
+# Runtime/test dependency lock for Python 3.11: no third-party packages.
+# Build dependencies are locked separately in requirements-build.lock.

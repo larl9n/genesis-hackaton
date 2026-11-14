@@ -23,6 +23,6 @@ PYTHONPATH=src python -m genesis_fintech evaluate-dataset artifacts/public-corpu
 
 ## Что измерено и что не обещаем
 
-RSS supervisor и дочернего CLI измеряются отдельно; это не суммарная память системы и Docker daemon. Для Docker записан лимит worker 512 MiB и неизменяемый image ID. Финальные аппаратные измерения и упаковка — отдельный блок. Наш набор проверок не является официальным стендом организаторов и не утверждает улучшение LLM.
+RSS supervisor и дочернего CLI измеряются отдельно; для каждого worker записываются kernel cgroup v2 peak memory, CPU usage, OOM и лимит 512 MiB. Измерения обязательны для Docker corpus-run. Это не суммарная память ОС и Docker daemon. Проверенные значения и ограничения — [RESOURCES.md](RESOURCES.md), упаковка — [RELEASE.md](RELEASE.md). Наш набор проверок не является официальным стендом организаторов и не утверждает улучшение LLM.
 
 Локальный development-прогон 20 эпизодов: reconciliation/oracle TP72/FP0/FN0, все 4 чистые компании без ложных тревог. Random TP0/FP80/FN72; flag-all TP8/FP592/FN64, micro F1≈0.02381. Это результат на публичном ограниченном синтетическом корпусе, не доказательство обобщения на неизвестные реальные данные.

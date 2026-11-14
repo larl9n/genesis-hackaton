@@ -24,7 +24,7 @@ from genesis_fintech.generation.scenario import generate_scenario
 from genesis_fintech.generation.storage import json_text, write_scenario
 from genesis_fintech.policies.wire import MAX_FRAME_BYTES, ProtocolError, decode_frame, encode_frame
 
-DEFAULT_IMAGE = "genesis-audit-worker:0.4.0"
+DEFAULT_IMAGE = "genesis-audit-worker:0.5.0"
 POLICIES = {"random", "flag-all", "reconciliation"}
 
 

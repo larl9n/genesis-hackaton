@@ -1,14 +1,16 @@
 [build-system]
-requires = ["setuptools>=68,<81"]
+requires = ["setuptools==79.0.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "genesis-fintech-env"
-version = "0.4.0"
+version = "0.5.0"
 description = "Reproducible synthetic financial-audit environment and baseline benchmark"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
+license = "MIT"
+license-files = ["LICENSE"]
 
 [project.scripts]
 genesis-fintech = "genesis_fintech.cli:main"

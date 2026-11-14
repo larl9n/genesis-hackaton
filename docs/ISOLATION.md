@@ -1,4 +1,4 @@
-# Внешняя политика и изоляция, версия 0.4.0
+# Внешняя политика и изоляция, версия 0.5.0
 
 Управляющий процесс хранит среду, seed, конфигурацию, truth и оценщик. Внешняя политика получает только публичные наблюдения через stdin и возвращает действия через stdout. Ни объект AuditEnv, ни reward/метрики оценки ей не передаются. Привилегированный oracle не допускается в этот worker.
 
@@ -36,7 +36,7 @@ Supervisor использует неблокирующее чтение и за�
 В доверенном окружении с работающим Docker предварительно собрать образ:
 
 ```bash
-docker build -f docker/worker.Dockerfile -t genesis-audit-worker:0.4.0 .
+docker build -f docker/worker.Dockerfile -t genesis-audit-worker:0.5.0 .
 PYTHONPATH=src python -m genesis_fintech run-policy --seed 42 --config configs/interactions.json --output artifacts/container-example
 ```
 
@@ -54,7 +54,7 @@ PYTHONPATH=src python -m genesis_fintech run-policy --seed 42 --config configs/i
 
 Worker ограничен 1 CPU, 512 MiB RAM без дополнительного swap, 64 процессами, 128 file descriptors, tmpfs /tmp до 64 MiB, без core dump. По умолчанию 60 секунд wall-time, включая запуск контейнера, но без генерации/экспорта и предварительной проверки образа. Это ограничения worker; суммарное CPU/RAM supervisor+Docker ещё нужно замерить отдельно перед сдачей.
 
-Доверяем ОС хоста, Docker daemon/runtime, supervisor и предварительно проверенному образу. Это не защита от уязвимостей ядра/контейнерного движка, не microVM и не сертификат безопасности. Нельзя предоставлять policy socket демона, privileged, host PID/network, bind mounts, дополнительные capabilities или секреты при сборке образа. Произвольные сторонние образы требуют отдельного review. Базовый образ пока задан тегом; его digest и build-зависимости предстоит зафиксировать на этапе упаковки.
+Доверяем ОС хоста, Docker daemon/runtime, supervisor и предварительно проверенному образу. Это не защита от уязвимостей ядра/контейнерного движка, не microVM и не сертификат безопасности. Нельзя предоставлять policy socket демона, privileged, host PID/network, bind mounts, дополнительные capabilities или секреты при сборке образа. Произвольные сторонние образы требуют отдельного review. Базовый образ закреплён digest, build-зависимость — версией и hash. Инструкции — RELEASE.md; cgroup/RSS-измерения и их область — RESOURCES.md.
 
 ## Проверка
 

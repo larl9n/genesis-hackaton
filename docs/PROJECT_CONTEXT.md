@@ -1,6 +1,6 @@
 # Состояние проекта для продолжения
 
-Обновлено: 14 ноября 2026 года. Engine — **0.4.0** с frozen corpus/evaluator. Последняя локальная проверка: 166 тестов, 161 passed, 5 local skipped. Блоки A/B опубликованы и прошли Docker corpus-run в CI. Блок C: измерение cgroup ресурсов проходит проверку. Сайт отложен. Последующие указания пользователя имеют приоритет над этим файлом.
+Обновлено: 14 ноября 2026 года. Engine — **0.5.0**, кандидат для сдачи. Последняя локальная проверка: 170 тестов, 165 passed, 5 local skipped. Блоки A/B/C опубликованы и прошли Docker corpus-run в CI. Блок D проходит финальную проверку комплекта. Сайт отложен. Последующие указания пользователя имеют приоритет над этим файлом.
 
 ## Проект и требования
 
@@ -54,8 +54,8 @@
 
 - В 0.4.0 реализованы и проверены в Linux CI JSON-line IPC, worker и Docker-backend: без host mounts/сети, read-only root, UID65534, cap-drop/no-new-privileges, CPU/RAM/PID/FD/tmpfs-лимиты, cleanup. Docker обязателен по умолчанию, fallback нет. Локально Docker отсутствует, sandbox-exec запрещён средой. Development subprocess и прежние demo/benchmark не являются OS-sandbox. Контейнеры доверяют ядру/движку; это не microVM. Образ пока собирается с Python-тега, pin digest остаётся для упаковки.
 - Политики и development failure analysis работают, но это узкие правила для синтетической модели, без LLM и обучения. Счета в иностранной валюте, multi-invoice receipts и новые ошибки не входят в проверенный охват reconciliation. Oracle не является независимым агентом.
-- Наборы 10 train + 10 dev и независимый conformance harness готовы; упаковка ещё впереди. Наши тесты нельзя называть официальным стендом организаторов.
-- Пользователь выбрал MIT; файл будет добавлен при упаковке. Lockfile нет, setuptools задан диапазоном. Счета в иностранной валюте, нераспределённые поступления и переоценка валютных остатков не моделируются; это ограниченный синтетический мир.
+- Наборы 10 train + 10 dev, независимый conformance harness и source/wheel builder готовы; финальный CI комплекта ещё проверяется. Наши тесты нельзя называть официальным стендом организаторов.
+- MIT добавлена по выбору пользователя. requirements.lock пустой (stdlib runtime/test), requirements-build.lock фиксирует setuptools79.0.1+wheel hash. Счета в иностранной валюте, нераспределённые поступления и переоценка валютных остатков не моделируются; это ограниченный синтетический мир.
 
 ## Конфиги и точные определения
 
@@ -65,7 +65,7 @@
 - `configs/interactions.json`: та же чистая история и четыре семейства, обе композиции.
 - `configs/default.json`: неиспользуемый проект первоначального полного формата; не передавать его текущим генераторам.
 - Определения expected_amount/affected_ids/evidence и декомпозиция взаимодействий — `docs/ISSUES.md`. Форматы — `docs/DATA.md`, API — `docs/ENVIRONMENT.md`, проверки — `docs/CHECKPOINTS.md`.
-- Пакет — 0.4.0, но generator_version и scenario_generator_version остаются 0.2.0: алгоритмы генерации не менялись. Инъекции — injections-v2. Seed/config без версии алгоритма недостаточны для повторения старой версии.
+- Пакет — 0.5.0, но generator_version и scenario_generator_version остаются 0.2.0: алгоритмы генерации не менялись. Инъекции — injections-v2. Seed/config без версии алгоритма недостаточны для повторения старой версии.
 
 ## Проверки и исправленные ошибки
 
@@ -112,4 +112,10 @@ codex resume 01a1d536-8ebb-7251-9871-1d3b095ddd0b -C /Users/zhopa/genesis-fintec
 
 ## Следующий этап
 
-UI реализован и опубликован; HTTP/API подтверждены CI, desktop просмотрен. Полный mobile/dialog visual QA остаётся непроверенным из-за ограничений CUA. Основной roadmap — 10 train + 10 dev и упаковка, лицензия/lockfile/pinned images, чистый запуск и итоговые ресурсы. Генератор, baseline/benchmark, IPC и контейнерный worker не начинать заново. Прежний benchmark и UI-run остаются in-process; не выдавать их за изолированную оценку или обучение.
+UI реализован и опубликован; HTTP/API подтверждены CI, desktop просмотрен. Полный mobile/dialog visual QA остаётся непроверенным из-за ограничений CUA. Основной roadmap реализован: 10 train + 10 dev, MIT/lockfile/pinned image, cgroup counters, source/wheel и offline verifier. Финальный CI 0.5.0 ещё проверяется. После его успеха нужны формат/время приёма организаторов и само выступление/отправка. Генератор, baseline/benchmark, IPC и контейнерный worker не начинать заново. Прежний benchmark и UI-run остаются in-process; не выдавать их за изолированную оценку или обучение.
+
+## Блоки C/D, 14 ноября
+
+C прошёл [CI 43588561164](https://github.com/larl9n/genesis-hackaton/actions/runs/43588561164), commit a5d0fffbf2aa7591b248a76785688fb93f8ab88e: четыре реальные Docker-интеграции, 80 runs/80 replays/20 grader-пар. Worker cgroup peak 25 141 248 bytes, supervisor RSS 30 412 800, CLI RSS 29 290 496; max worker elapsed <0.376s, весь suite 53s. Все 60 основных worker counters проверены и все повторы тоже. Измерение не включает daemon/ядро, физический хост 2 CPU/4GB не сертифицирован.
+
+D: scripts/build_release.py, verify_release.py, tests/test_release.py, LICENSE, requirements*.lock, docs/RELEASE.md/RESOURCES.md/DEMO.md. Source allowlist исключает CHAT_HISTORY/private/artifacts; манифест hashes, normalized tar/gzip и SOURCE_DATE_EPOCH для wheel. Чистый venv без package downloads запускает установленный CLI с -I вне repo и demo TP4/FP0/FN0, затем все тесты распакованного source. Локальный probe прошёл; итоговая сборка и CI ещё проверяются. UI samples перезаписаны только для версии engine 0.5.0, дизайн не менялся. Base image закреплён digest a83ba18aef0f865b1a4a611c2cf460fe446f2795673bbb9fe43be570439e3b39. Старая editable metadata .venv может оставаться 0.3.0; wheel отдельно проверяется на 0.5.0.
