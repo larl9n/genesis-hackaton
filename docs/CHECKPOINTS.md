@@ -6,6 +6,8 @@
 
 В Chrome просмотрен первый экран index.html и AX с наполненными метриками, 4 находками, proof-документами и правильной маркировкой записанного примера. Mobile/dialog browser QA не завершён из-за нестабильного управления окнами; не считать это подтверждением responsive-вида. При обычном запуске serve доступны новые параметры; при file-preview доступны только записанные реальные seed42. Подробнее — [UI.md](UI.md).
 
+Коммит e2182af опубликован; [CI 43573464612](https://github.com/larl9n/genesis-hackaton/actions/runs/43573464612) success, включая реальный HTTP-тест, Node-проверку JavaScript и 4 отдельные Docker-интеграции.
+
 ## Внешний worker, версия 0.4.0
 
 `make check PYTHON=.venv/bin/python`: 146 тестов, 142 проходят, 4 Docker-интеграции пропущены локально (Docker отсутствует). Проверены правильные и ошибочные JSON-line frames, размеры, UTF-8/NaN/duplicate keys, request_id, EOF, hangs, блокирование записи, stderr-флуд, очистка процессов и отказ без Docker. In-process и subprocess траектории трёх политик совпадают.
