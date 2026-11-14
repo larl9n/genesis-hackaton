@@ -42,7 +42,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Build minimal policy image
-        run: docker build -f docker/worker.Dockerfile -t genesis-audit-worker:0.5.0 .
+        run: docker build -f docker/worker.Dockerfile -t genesis-audit-worker:0.6.0 .
       - name: Test actual container isolation and complete episode
         env:
           GENESIS_RUN_DOCKER_TESTS: "1"
@@ -54,6 +54,13 @@ jobs:
         run: |
           python -m genesis_fintech generate-dataset --spec configs/dataset.json --output artifacts/ci-corpus
           cmp artifacts/ci-corpus/public-index.json datasets/public-v1.index.json
+      - name: Reproduce packaged train trajectories and verify rewards
+        env:
+          PYTHONPATH: src
+        run: |
+          python -m genesis_fintech collect-trajectories artifacts/ci-corpus --output artifacts/ci-training
+          python -m genesis_fintech validate-trajectories artifacts/ci-corpus examples/training-v1
+          cmp artifacts/ci-training/trajectories.jsonl examples/training-v1/trajectories.jsonl
       - name: Evaluate all stored episodes in containers and repeat
         env:
           PYTHONPATH: src

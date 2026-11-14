@@ -6,7 +6,7 @@
 
 ## Статус
 
-**Версия 0.5.0 — кандидат для сдачи.** Работают четыре семейства ошибок, две композиции, независимая проверка, инструменты и четыре стратегии. Заморожены 10 train + 10 dev: три обычные политики оцениваются в Docker, oracle — только у оценщика. Встроенный UI остаётся дополнительной локальной демонстрацией. Добавлены измерения cgroup, MIT, фиксированные build-зависимости и воспроизводимая упаковка.
+**Версия 0.6.0 — кандидат для сдачи.** Работают четыре семейства ошибок, две композиции, независимая проверка, инструменты и четыре стратегии. Заморожены 10 train + 10 dev: три обычные политики оцениваются в Docker, oracle — только у оценщика. Встроенный UI остаётся дополнительной локальной демонстрацией. Добавлены измерения cgroup, MIT, фиксированные build-зависимости, воспроизводимая упаковка и экспорт обучающих траекторий обычных политик.
 
 [Linux CI корпуса и ресурсов](https://github.com/larl9n/genesis-hackaton/actions/runs/43588561164) прошёл: 80 прогонов, 80 повторов, 20 grader-пар и реальные проверки контейнерной изоляции. Финальная проверка пакета описана в [RELEASE.md](docs/RELEASE.md); успешность конкретной сборки смотрите по её commit в Actions.
 
@@ -36,6 +36,15 @@ PYTHONPATH=src python -m genesis_fintech evaluate-dataset artifacts/public-corpu
 Оценка по умолчанию требует заранее собранный Docker worker image. Три обычные политики работают с одинаковыми сохранёнными записями; oracle остаётся на стороне оценщика. Выполняются 80 прогонов, 80 повторов и 20 grader-пар ID/order; формируются метрики, отчёт и траектории. Явный `--backend development` разрешён только для доверенной локальной проверки. [Данные](docs/DATASETS.md), [методика](docs/CONFORMANCE.md).
 
 ## Быстрый старт
+
+### Получить обучающие траектории
+
+```bash
+PYTHONPATH=src python -m genesis_fintech collect-trajectories artifacts/public-corpus-v1 --output artifacts/train-rollouts
+PYTHONPATH=src python -m genesis_fintech validate-trajectories artifacts/public-corpus-v1 artifacts/train-rollouts
+```
+
+Команды используют предварительно созданный корпус. Готовый пример `examples/training-v1/` включён в source bundle: 10 train-эпизодов, 120 переходов, mean return 0.978. Exporter доверенный, in-process; веса модели не обучаются. Формат и replay — [TRAINING.md](docs/TRAINING.md), соответствие кейсу — [SUBMISSION.md](docs/SUBMISSION.md).
 
 ### Открыть UI
 
@@ -138,7 +147,7 @@ PYTHONPATH=src python -m genesis_fintech benchmark --output artifacts/baseline-e
 ## Внешняя политика
 
 ```bash
-docker build -f docker/worker.Dockerfile -t genesis-audit-worker:0.5.0 .
+docker build -f docker/worker.Dockerfile -t genesis-audit-worker:0.6.0 .
 PYTHONPATH=src python -m genesis_fintech run-policy --seed 42 --config configs/interactions.json --output artifacts/container-example
 ```
 

@@ -20,7 +20,9 @@ ROOT = Path(__file__).resolve().parents[1]
 FILES = ("README.md", "CONTRIBUTING.md", "AGENTS.md", "LICENSE", "Makefile", "pyproject.toml",
          "requirements.lock", "requirements-build.lock", ".gitignore", ".dockerignore",
          ".gitattributes", ".python-version", "PLAN.md",
-         "hyperstudio.org-DESIGN.md", "datasets/public-v1.index.json", "datasets/public-v1.tar.gz")
+         "hyperstudio.org-DESIGN.md", "datasets/public-v1.index.json", "datasets/public-v1.tar.gz",
+         "examples/training-v1/manifest.json", "examples/training-v1/initial_observations.jsonl",
+         "examples/training-v1/trajectories.jsonl")
 PATTERNS = ("src/**/*.py", "src/genesis_fintech/web/static/*", "tests/test_*.py",
             "tests/README.md", "tests/fixtures/*.json", "configs/*.json", "docs/*.md",
             "scripts/*.py", "docker/*.Dockerfile", ".github/workflows/*.yml", ".github/*.md",

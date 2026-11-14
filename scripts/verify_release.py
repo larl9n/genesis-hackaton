@@ -69,6 +69,14 @@ def main():
         summary=json.loads((root/"demo/summary.json").read_text())
         if (summary["metrics"]["tp"],summary["metrics"]["fp"],summary["metrics"]["fn"]) != (4,0,0):
             raise ValueError("installed wheel demo failed")
+        run([str(python),"-I","-m","genesis_fintech","generate-dataset","--spec",
+             str(source/"configs/dataset.json"),"--output",str(root/"corpus")])
+        run([str(python),"-I","-m","genesis_fintech","validate-trajectories",str(root/"corpus"),
+             str(source/"examples/training-v1")])
+        run([str(python),"-I","-m","genesis_fintech","collect-trajectories",str(root/"corpus"),
+             "--output",str(root/"training")])
+        if (root/"training/trajectories.jsonl").read_bytes() != (source/"examples/training-v1/trajectories.jsonl").read_bytes():
+            raise ValueError("installed wheel training rollout mismatch")
         if args.full_check:
             run(["make","check", "PYTHON="+str(python)],cwd=source)
     print(json.dumps({"ok":True,"offline_install":True,"clean_source_checks":args.full_check}))

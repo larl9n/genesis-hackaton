@@ -24,11 +24,19 @@ def main() -> int:
     dataset_check = commands.add_parser("validate-dataset", help="Independently verify dataset bytes, truth and optional replay")
     dataset_check.add_argument("directory")
     dataset_check.add_argument("--replay", action="store_true")
+    rollouts = commands.add_parser("collect-trajectories", help="Export ordinary-policy training rewards from ten stored train episodes")
+    rollouts.add_argument("directory")
+    rollouts.add_argument("--output", required=True)
+    rollouts.add_argument("--policy", choices=["random", "flag-all", "reconciliation"], default="reconciliation")
+    rollouts.add_argument("--policy-seed", type=int, default=17)
+    rollout_check = commands.add_parser("validate-trajectories", help="Replay saved training actions, observations and rewards")
+    rollout_check.add_argument("directory")
+    rollout_check.add_argument("rollouts")
     suite = commands.add_parser("evaluate-dataset", help="Evaluate all stored episodes with external policies and host-only oracle")
     suite.add_argument("directory")
     suite.add_argument("--output", required=True)
     suite.add_argument("--backend", choices=["docker", "development"], default="docker")
-    suite.add_argument("--image", default="genesis-audit-worker:0.5.0")
+    suite.add_argument("--image", default="genesis-audit-worker:0.6.0")
     suite.add_argument("--policy-seed", type=int, default=17)
     suite.add_argument("--replay", action="store_true")
     generate = commands.add_parser("generate-clean", help="Generate and independently check a clean company")
@@ -61,7 +69,7 @@ def main() -> int:
     external.add_argument("--policy", choices=["random", "flag-all", "reconciliation"], default="reconciliation")
     external.add_argument("--policy-seed", type=int, default=0)
     external.add_argument("--backend", choices=["docker", "development"], default="docker")
-    external.add_argument("--image", default="genesis-audit-worker:0.5.0")
+    external.add_argument("--image", default="genesis-audit-worker:0.6.0")
     external.add_argument("--wall-time", type=int, default=60)
     external.add_argument("--max-steps", type=int, default=100)
     args = parser.parse_args()
@@ -87,6 +95,12 @@ def main() -> int:
         from .generation.clean import CleanConfig, generate_clean
         from .generation.storage import load_public, read_json, write_clean
         try:
+            if args.command in {"collect-trajectories", "validate-trajectories"}:
+                from .evaluation.rollouts import collect_trajectories, validate_trajectories
+                result = (collect_trajectories(args.directory, args.output, policy=args.policy, policy_seed=args.policy_seed)
+                          if args.command == "collect-trajectories" else validate_trajectories(args.directory, args.rollouts))
+                print(json.dumps(result, indent=2))
+                return 0
             if args.command == "evaluate-dataset":
                 from .evaluation.suite import evaluate_dataset
                 result = evaluate_dataset(Path(args.directory), Path(args.output), backend=args.backend,
@@ -167,7 +181,8 @@ def main() -> int:
                         "observation_only_baselines", "baseline_benchmark", "development_failure_analysis",
                         "bounded_worker_ipc", "external_policy_runner", "docker_worker_backend", "local_audit_ui",
                         "frozen_train_dev_datasets", "stored_episode_evaluation", "corpus_conformance_checks",
-                        "worker_cgroup_measurements", "reproducible_source_bundle", "offline_wheel_installation"],
+                        "worker_cgroup_measurements", "reproducible_source_bundle", "offline_wheel_installation",
+                        "training_trajectory_export", "training_action_reward_replay"],
         "planned": [],
         "end_to_end_available": True,
         "security_mode": "development_in_process",

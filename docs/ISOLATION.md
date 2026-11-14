@@ -1,4 +1,4 @@
-# Внешняя политика и изоляция, версия 0.5.0
+# Внешняя политика и изоляция, версия 0.6.0
 
 Управляющий процесс хранит среду, seed, конфигурацию, truth и оценщик. Внешняя политика получает только публичные наблюдения через stdin и возвращает действия через stdout. Ни объект AuditEnv, ни reward/метрики оценки ей не передаются. Привилегированный oracle не допускается в этот worker.
 
@@ -36,7 +36,7 @@ Supervisor использует неблокирующее чтение и за�
 В доверенном окружении с работающим Docker предварительно собрать образ:
 
 ```bash
-docker build -f docker/worker.Dockerfile -t genesis-audit-worker:0.5.0 .
+docker build -f docker/worker.Dockerfile -t genesis-audit-worker:0.6.0 .
 PYTHONPATH=src python -m genesis_fintech run-policy --seed 42 --config configs/interactions.json --output artifacts/container-example
 ```
 

@@ -1,6 +1,6 @@
 # Архитектура
 
-Статус: пакет v0.5.0, config v0.2; модели, генератор, четыре инъекции, композиции, checker/scorer и baseline/benchmark дополнены внешним worker, JSON-line IPC и Docker-backend. Контейнерный режим проверен в Linux CI; прежний in-process benchmark остаётся режимом разработки. Public schema v0.2 явно разрешает signed refunds; v0.1 поддержана только для положительных записей.
+Статус: пакет v0.6.0, config v0.2; модели, генератор, четыре инъекции, композиции, checker/scorer и baseline/benchmark дополнены внешним worker, JSON-line IPC и Docker-backend. Контейнерный режим проверен в Linux CI; прежний in-process benchmark остаётся режимом разработки. Public schema v0.2 явно разрешает signed refunds; v0.1 поддержана только для положительных записей. evaluation/rollouts.py экспортирует безопасные train-переходы доверенных обычных политик и проверяет точное воспроизведение награды; источник данных — только сохранённые train-эпизоды, oracle не используется.
 
 ## Основной поток
 

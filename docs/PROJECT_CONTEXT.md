@@ -1,6 +1,6 @@
 # Состояние проекта для продолжения
 
-Обновлено: 14 ноября 2026 года. Engine — **0.5.0**, кандидат для сдачи. Последняя локальная проверка: 170 тестов, 165 passed, 5 local skipped. Блоки A/B/C опубликованы и прошли Docker corpus-run в CI. Блок D проходит финальную проверку комплекта. Сайт отложен. Последующие указания пользователя имеют приоритет над этим файлом.
+Обновлено: 14 ноября 2026 года. Engine — **0.6.0**, кандидат с train trajectory exporter. Блоки A/B/C/D завершены, версия 0.5.0 проверена CI 43589316181 и опубликована как 762aeefcae3c9478f2fc560546238dc426ec4b57. По новому поручению пользователя выполняется блок E: сверка кейса, train JSONL в комплекте и точное воспроизведение. Предварительно снова прошли 170 тестов (165 passed, 5 local skips), шесть новых rollout-тестов прошли. Финальная регрессия и CI 0.6.0 ещё проверяются. Сайт отложен. Последующие указания пользователя имеют приоритет над этим файлом.
 
 ## Проект и требования
 
@@ -50,11 +50,11 @@
 - `evaluation/benchmark.py`: пять development-профилей, одинаковые seed/config для всех четырёх стратегий; oracle остаётся host-only. SHA-256 public-записей, конфиги, версии, метрики, TP/FP/FN по семействам, причины неуспешных прогонов, JSON/Markdown-отчёты и JSONL-траектории. Все детерминированные поля и траектории повторяются; runtime измеряется отдельно после reset.
 - CLI: doctor, info, generate-clean, validate-clean, generate-scenario, validate-scenario, score, demo, benchmark. info показывает development_baseline_benchmark, end_to_end_available=true и security_mode=development_in_process.
 
-## Что НЕ готово
+## Готовность и ограничения
 
 - В 0.4.0 реализованы и проверены в Linux CI JSON-line IPC, worker и Docker-backend: без host mounts/сети, read-only root, UID65534, cap-drop/no-new-privileges, CPU/RAM/PID/FD/tmpfs-лимиты, cleanup. Docker обязателен по умолчанию, fallback нет. Локально Docker отсутствует, sandbox-exec запрещён средой. Development subprocess и прежние demo/benchmark не являются OS-sandbox. Контейнеры доверяют ядру/движку; это не microVM. Образ пока собирается с Python-тега, pin digest остаётся для упаковки.
 - Политики и development failure analysis работают, но это узкие правила для синтетической модели, без LLM и обучения. Счета в иностранной валюте, multi-invoice receipts и новые ошибки не входят в проверенный охват reconciliation. Oracle не является независимым агентом.
-- Наборы 10 train + 10 dev, независимый conformance harness и source/wheel builder готовы; финальный CI комплекта ещё проверяется. Наши тесты нельзя называть официальным стендом организаторов.
+- Наборы 10 train + 10 dev, независимый conformance harness и source/wheel builder готовы; финальный CI комплекта прошёл. Наши тесты нельзя называть официальным стендом организаторов.
 - MIT добавлена по выбору пользователя. requirements.lock пустой (stdlib runtime/test), requirements-build.lock фиксирует setuptools79.0.1+wheel hash. Счета в иностранной валюте, нераспределённые поступления и переоценка валютных остатков не моделируются; это ограниченный синтетический мир.
 
 ## Конфиги и точные определения
@@ -65,7 +65,7 @@
 - `configs/interactions.json`: та же чистая история и четыре семейства, обе композиции.
 - `configs/default.json`: неиспользуемый проект первоначального полного формата; не передавать его текущим генераторам.
 - Определения expected_amount/affected_ids/evidence и декомпозиция взаимодействий — `docs/ISSUES.md`. Форматы — `docs/DATA.md`, API — `docs/ENVIRONMENT.md`, проверки — `docs/CHECKPOINTS.md`.
-- Пакет — 0.5.0, но generator_version и scenario_generator_version остаются 0.2.0: алгоритмы генерации не менялись. Инъекции — injections-v2. Seed/config без версии алгоритма недостаточны для повторения старой версии.
+- Пакет — 0.6.0, но generator_version и scenario_generator_version остаются 0.2.0: алгоритмы генерации не менялись. Инъекции — injections-v2. Seed/config без версии алгоритма недостаточны для повторения старой версии.
 
 ## Проверки и исправленные ошибки
 
@@ -110,12 +110,26 @@ codex resume 01a1d536-8ebb-7251-9871-1d3b095ddd0b -C /Users/zhopa/genesis-fintec
 
 Список всех сеансов — `codex resume --all`. `--last` может открыть другой чат. Возврат зависит от наличия локального сеанса. Новый чат в этой папке прочитает AGENTS.md и этот файл; локальный CHAT_HISTORY.md — снимок видимой переписки, не публичный файл.
 
-## Следующий этап
+## Состояние после блоков A–D (до нового поручения E)
 
-UI реализован и опубликован; HTTP/API подтверждены CI, desktop просмотрен. Полный mobile/dialog visual QA остаётся непроверенным из-за ограничений CUA. Основной roadmap реализован: 10 train + 10 dev, MIT/lockfile/pinned image, cgroup counters, source/wheel и offline verifier. Финальный CI 0.5.0 ещё проверяется. После его успеха нужны формат/время приёма организаторов и само выступление/отправка. Генератор, baseline/benchmark, IPC и контейнерный worker не начинать заново. Прежний benchmark и UI-run остаются in-process; не выдавать их за изолированную оценку или обучение.
+UI реализован и опубликован; HTTP/API подтверждены CI, desktop просмотрен. Полный mobile/dialog visual QA остаётся непроверенным из-за ограничений CUA. Основной roadmap реализован: 10 train + 10 dev, MIT/lockfile/pinned image, cgroup counters, source/wheel и offline verifier. Финальный CI 0.5.0 прошёл. Нужны формат/время приёма организаторов и само выступление/отправка. Генератор, baseline/benchmark, IPC и контейнерный worker не начинать заново. Прежний benchmark и UI-run остаются in-process; не выдавать их за изолированную оценку или обучение.
 
 ## Блоки C/D, 14 ноября
 
 C прошёл [CI 43588561164](https://github.com/larl9n/genesis-hackaton/actions/runs/43588561164), commit a5d0fffbf2aa7591b248a76785688fb93f8ab88e: четыре реальные Docker-интеграции, 80 runs/80 replays/20 grader-пар. Worker cgroup peak 25 141 248 bytes, supervisor RSS 30 412 800, CLI RSS 29 290 496; max worker elapsed <0.376s, весь suite 53s. Все 60 основных worker counters проверены и все повторы тоже. Измерение не включает daemon/ядро, физический хост 2 CPU/4GB не сертифицирован.
 
 D: scripts/build_release.py, verify_release.py, tests/test_release.py, LICENSE, requirements*.lock, docs/RELEASE.md/RESOURCES.md/DEMO.md. Source allowlist исключает CHAT_HISTORY/private/artifacts; манифест hashes, normalized tar/gzip и SOURCE_DATE_EPOCH для wheel. Чистый venv без package downloads запускает установленный CLI с -I вне repo и demo TP4/FP0/FN0, затем все тесты распакованного source. Локальный probe прошёл; итоговая сборка и CI ещё проверяются. UI samples перезаписаны только для версии engine 0.5.0, дизайн не менялся. Base image закреплён digest a83ba18aef0f865b1a4a611c2cf460fe446f2795673bbb9fe43be570439e3b39. Старая editable metadata .venv может оставаться 0.3.0; wheel отдельно проверяется на 0.5.0.
+
+## Блок E: приёмка и train JSONL, 0.6.0
+
+Пользователь поручил следующий блок после повторной проверки. Предварительная регрессия 170 тестов прошла. Google Docs metadata и английская/русская вкладки повторно прочитаны: modifiedTime 2026-11-12T16:26:51.813Z, документ по-прежнему draft. Выявлен пробел комплекта: raw train JSONL не был вложен в source, хотя создавался demo/отчётами отдельно.
+
+Добавлены evaluation/rollouts.py и CLI collect-trajectories/validate-trajectories. Только 10 train, три обычные политики; oracle не допускается, dev не используется для действий (валидируется целостность всего корпуса). Доверенный in-process exporter, не OS sandbox и не обучение весов. initial_observations.jsonl + trajectories.jsonl + manifest, только публичные записи/действия и train reward. До submit reward0, затем реальная общая награда; evaluation не меняется. Валидатор повторяет политику, все действия/наблюдения/награды и reject подделок даже после пересчёта hash; генератор не вызывается при replay.
+
+examples/training-v1 включён в source allowlist: reconciliation policy seed17, 10 train / 120 transitions / mean return0.978, без private truth/seed/provenance. TRAINING.md описывает формат, SUBMISSION.md — матрицу требований, краткую записку и границы приёмки. 20 скрытых эпизодов (пять clean/пять interactions) относятся к официальному стенду организаторов; публичный корпус не объявляется таким стендом.
+
+Локальная проверка: 176 tests, 171 passed, 5 local skips; шесть новых rollout-тестов прошли, включая tamper/replay/CLI и воспроизведение вложенного примера. Чистый wheel verifier теперь отдельно воспроизводит train example; CI добавляет cmp/replay примера. Финальная сборка и CI блока E ещё проверяются. Версия пакета/worker tag 0.6.0; версии алгоритмов и public corpus не изменились, samples.js перестроен только для версии engine.
+
+Итог D: [CI 43589316181](https://github.com/larl9n/genesis-hackaton/actions/runs/43589316181) success для commit 762aeefcae3c9478f2fc560546238dc426ec4b57. Исправлена ошибка YAML команды --only-binary=:all: (block scalar); после исправления обе jobs прошли. 170 тестов покрыты обычной job с настоящим HTTP и отдельными четырьмя Docker-интеграциями. Сборки source/wheel повторены с точным SHA256SUMS; clean offline install + demo + full extracted source suite прошли и локально, и в CI. Опубликованы Actions artifacts genesis-release (14111921633) и genesis-evaluation (14111741840). Worker max peak 25 444 352 bytes, max elapsed <0.372s, whole suite 53.46s, OOM=0. Reconciliation TP72/FP0/FN0 на публичном корпусе, 4/4 clean.
+
+Локальный проверенный пакет — dist/release-v0.5.0: source SHA256 54202d4683c9dd66411b93662c4e22b7502f09ff7c2e4630f2e1e3a544c99ebd, wheel dd3aeb144994f35973ff271abfd1c78aa72b9cd63ed926c3e0671fb230e37b49. Устаревшие промежуточные dist-копии удалены. Editable-установка .venv тоже обновлена до 0.5.0, doctor подтверждает Python3.11.18; системный Python не менялся. Все 106 файлов allowlist совпали с remote Git blob SHA перед этой финальной локальной записью контекста. origin/main обновлён fetch до 762aeef; локальные HEAD/index остаются прежними из-за защиты .git, не делать reset/очистку файлов. Эта итоговая запись контекста сделана локально после проверенной публикации. Организаторам ничего не отправлялось.

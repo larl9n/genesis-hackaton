@@ -1,0 +1,78 @@
+{
+  "dataset_id": "genesis-public-v1",
+  "engine_version": "0.6.0",
+  "episodes": [
+    {
+      "episode_id": "episode_c2a7af9eab79b0056dd177d2c700d84c",
+      "episode_return": 0.978,
+      "public_sha256": "d97f70c437882434295e787c6d0c9768bbc70da1d61189df00f29c58b3141531",
+      "steps": 12
+    },
+    {
+      "episode_id": "episode_c2b9546e0f0220f3edb7f1d5cbf15150",
+      "episode_return": 0.978,
+      "public_sha256": "8fcc87afec7a32003b323db96ca086c28c1fc15eab9178433123cf21bbb89a6e",
+      "steps": 12
+    },
+    {
+      "episode_id": "episode_e638bca46bd70d89987fc91e855cdff8",
+      "episode_return": 0.978,
+      "public_sha256": "18d67d3f34dbfcea7df77654e1b0c9cc4b31f262751f78ec2e215265f631368a",
+      "steps": 12
+    },
+    {
+      "episode_id": "episode_38b1f9a35c2855ba8f0f9d8c7f51c46e",
+      "episode_return": 0.978,
+      "public_sha256": "26349cd04a8fd65023d2dcb7708775e7c5c2be1d7caea77bab0efee34d4f88d0",
+      "steps": 12
+    },
+    {
+      "episode_id": "episode_b8004092f9e22b921b38eefa6bced784",
+      "episode_return": 0.978,
+      "public_sha256": "eacff4d6a9619463903b39f85953bc2789d8f9df44bd284df1dae3f0ed407ca4",
+      "steps": 12
+    },
+    {
+      "episode_id": "episode_662e0001e6f57713ca1ebac97bad1f68",
+      "episode_return": 0.978,
+      "public_sha256": "31663856f0e6a0890c11a9fc133d80884b229ed412d822fb7059440f1aa94aef",
+      "steps": 12
+    },
+    {
+      "episode_id": "episode_71985eb13a8839190e4bd00558bc15e5",
+      "episode_return": 0.978,
+      "public_sha256": "5ab3e74441e1b42d401f9ee970f2c5a60cf915e8a0029f3a5cf7a8cb97c45c72",
+      "steps": 12
+    },
+    {
+      "episode_id": "episode_d6bc0d35ccec83e4083fb0efdb1ed801",
+      "episode_return": 0.978,
+      "public_sha256": "73079079b705c12ec5f651794023057bd9da64e4f2b354645e728e6be3d1c285",
+      "steps": 12
+    },
+    {
+      "episode_id": "episode_71f2223ff559a0f9f65923cd85132c85",
+      "episode_return": 0.978,
+      "public_sha256": "56d6a22d24c2ea9c47aeec0d2b931bf35fc3c93e8eed44a789bb4f0e6eca99d7",
+      "steps": 12
+    },
+    {
+      "episode_id": "episode_fecef7077cc3c602030c06ab2e21172d",
+      "episode_return": 0.978,
+      "public_sha256": "8d5a35483d9073f2311760d4af930bd6a8d7be846129c4edab29fe25966672f3",
+      "steps": 12
+    }
+  ],
+  "files": {
+    "initial_observations.jsonl": "908fd9a3ea5d2f86500ae814ce8ae532f4d43ad1fe878328f625ca56edc8e107",
+    "trajectories.jsonl": "94cb4f9d99a73cdec17e976f5e8e0d844f913a6e96a30e1407e99637eb5e7921"
+  },
+  "format": "training-rollouts-v1",
+  "mode": "train",
+  "model_weight_training": false,
+  "policy": "reconciliation",
+  "policy_seed": 17,
+  "public_archive_sha256": "408c1cef6dc2257879d4b441f046642d0de1553c570129207401e83c68984e50",
+  "security_mode": "trusted_in_process",
+  "split": "train"
+}

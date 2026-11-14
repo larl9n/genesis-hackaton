@@ -27,8 +27,10 @@ evaluate:
 	PYTHONPATH=src $(PYTHON) -m genesis_fintech generate-dataset --spec configs/dataset.json --output "$(RUN_DIR)/corpus"
 	cmp "$(RUN_DIR)/corpus/public-index.json" datasets/public-v1.index.json
 	cmp "$(RUN_DIR)/corpus/public-train-dev.tar.gz" datasets/public-v1.tar.gz
+	PYTHONPATH=src $(PYTHON) -m genesis_fintech collect-trajectories "$(RUN_DIR)/corpus" --output "$(RUN_DIR)/training"
+	PYTHONPATH=src $(PYTHON) -m genesis_fintech validate-trajectories "$(RUN_DIR)/corpus" examples/training-v1
 	PYTHONPATH=src $(PYTHON) -m genesis_fintech evaluate-dataset "$(RUN_DIR)/corpus" --output "$(RUN_DIR)/evaluation" --replay
 
 release:
-	$(PYTHON) scripts/build_release.py --output dist/release-v0.5.0
-	$(PYTHON) scripts/verify_release.py dist/release-v0.5.0 --full-check
+	$(PYTHON) scripts/build_release.py --output dist/release-v0.6.0
+	$(PYTHON) scripts/verify_release.py dist/release-v0.6.0 --full-check
