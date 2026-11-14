@@ -15,6 +15,10 @@ jobs:
           python-version: "3.11"
       - name: Check data, grader and development episodes
         run: make check
+      - name: Check browser JavaScript syntax
+        run: |
+          node --check src/genesis_fintech/web/static/app.js
+          node --check src/genesis_fintech/web/static/samples.js
   isolated-worker:
     runs-on: ubuntu-latest
     timeout-minutes: 10

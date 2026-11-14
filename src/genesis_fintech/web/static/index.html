@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080808">
+  <meta name="description" content="Genesis — воспроизводимая среда для финансового аудита. Исследуйте синтетические записи, находите ошибки и проверяйте доказательства.">
+  <title>Genesis — цифры требуют доказательств</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="samples.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#lab">Перейти к среде</a>
+  <header class="header">
+    <nav class="nav rail" aria-label="Основная навигация">
+      <a href="#" class="wordmark" aria-label="Genesis, начало"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v5H9v6h6v-2h-3V9h8v11H4Z"/></svg>genesis<span class="wordmark-period">lab</span></a>
+      <span class="nav-divider" aria-hidden="true"></span>
+      <div class="nav-links"><a href="#approach">Подход</a><a href="#lab">Среда <sup>DEMO</sup></a><a href="#method">Процесс</a></div>
+      <a class="key key-small" href="#lab"><span>Начать аудит <span aria-hidden="true">↗</span></span></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="status-chip"><span class="status-dot"></span>Среда финансового аудита</div>
+        <h1 id="hero-title">Доверяйте цифрам.<br>Проверяйте связи.</h1>
+        <div class="hero-actions"><a class="key" href="#lab"><span>Открыть среду <span aria-hidden="true">↗</span></span></a><a class="key-secondary" href="#approach">Как это работает <span aria-hidden="true">↓</span></a></div>
+      </div>
+      <div class="sculpture" aria-hidden="true"><img src="sculpture.svg" alt="" width="1498" height="475"></div>
+      <div class="hero-caption rail"><span>СИНТЕТИЧЕСКИЕ ДАННЫЕ</span><span class="crosshair" aria-hidden="true">+</span><span>РЕАЛЬНАЯ ЛОГИКА ПРОВЕРКИ</span></div>
+    </section>
+
+    <section class="rail section" id="approach" aria-labelledby="approach-title">
+      <div class="section-heading"><p class="eyebrow">// 01 — ПОДХОД</p><h2 id="approach-title">За каждой находкой —<br>цепочка доказательств.</h2><p class="lead">От согласованной истории компании до проверяемого вывода.</p></div>
+      <div class="capability-grid">
+        <article class="capability"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h10l4 4v14H5Z M14 3v5h5 M8 12h8 M8 16h5"/></svg><h3>История, а не шум</h3><p>Счета, платежи и проводки создаются из одной истории. Ошибки вносятся после.</p></article>
+        <article class="capability"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h6v6H3Z M15 12h6v6h-6Z M9 9h6v6 M6 12v6h9"/></svg><h3>Сложность в связях</h3><p>Дубли, распределение платежей, валютные курсы и границы периода — по отдельности и вместе.</p></article>
+        <article class="capability"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4Z M8 12l3 3 6-7 M2 8h4 M18 16h4"/></svg><h3>Проверяемый результат</h3><p>Учитываются сумма, валюта, тип ошибки и полный набор подтверждающих записей.</p></article>
+        <article class="capability"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8a8 8 0 1 1-1 8 M5 3v6H0 M9 8h6v8H9Z"/></svg><h3>Точный повтор</h3><p>Те же параметры и версия генератора воспроизводят данные, действия и оценку.</p></article>
+      </div>
+    </section>
+
+    <section class="rail lab-section" id="lab" aria-labelledby="lab-title">
+      <div class="chapter-caption"><div class="chapter-icon" aria-hidden="true">G<span>↗</span></div><div><h2 id="lab-title">Аудиторская лаборатория</h2><span class="caption-separator" aria-hidden="true"></span><span class="mono">ИНТЕРАКТИВНЫЙ ПРОГОН</span></div></div>
+      <div class="console">
+        <div class="console-top"><span><i class="console-dot"></i>GENESIS / WORKSPACE</span><span id="connection-label">ПРИМЕР · SEED 42</span></div>
+        <form id="run-form" class="run-form">
+          <div class="form-heading"><div><p class="eyebrow">// НОВЫЙ ЭПИЗОД</p><h3>Начните с вопроса к данным.</h3></div><span class="tiny-label">01 / 03</span></div>
+          <div class="field-grid">
+            <label>Сценарий<select id="scenario" name="scenario"><option value="interactions">Взаимодействующие ошибки</option><option value="independent">Четыре независимые ошибки</option><option value="clean">Чистая компания</option></select></label>
+            <label>Политика<select id="policy" name="policy"><option value="reconciliation">Сверка документов</option><option value="random">Случайные гипотезы</option><option value="flag-all">Отметить всё</option></select></label>
+            <label class="seed-field">Seed<input id="seed" name="seed" type="number" min="0" max="2147483647" value="42" required inputmode="numeric"></label>
+          </div>
+          <div class="run-controls"><p id="mode-description">Показан сохранённый результат настоящего прогона. Для новых параметров нужен локальный сервер.</p><button class="key" id="run-button" type="submit"><span><span id="run-button-text">Смотреть пример</span> <span aria-hidden="true">↗</span></span></button></div>
+          <p id="run-error" class="error-message" role="alert" hidden></p>
+        </form>
+        <div class="results" id="results" aria-busy="false">
+          <div class="result-heading"><span class="result-status"><i class="status-dot"></i><span id="result-label">Пример завершён</span></span><span id="episode-caption" class="tiny-label">SEED 42</span></div>
+          <div class="metric-grid"><div><span>F1 / КАЧЕСТВО</span><strong id="metric-f1">—</strong></div><div><span>НАЙДЕНО / ПРОПУЩЕНО</span><strong id="metric-found">—</strong></div><div><span>ЛОЖНЫЕ ТРЕВОГИ</span><strong id="metric-fp">—</strong></div><div><span>ШАГИ / БЮДЖЕТ</span><strong id="metric-steps">—</strong></div></div>
+          <div class="result-meta"><span id="records-caption">Документы и проводки</span><span>НАГРАДА <b id="metric-reward">—</b></span></div>
+          <div class="tab-bar" role="tablist" aria-label="Результаты аудита"><button role="tab" id="tab-findings" aria-selected="true" aria-controls="panel-findings" tabindex="0">Находки <span id="finding-count">0</span></button><button role="tab" id="tab-trajectory" aria-selected="false" aria-controls="panel-trajectory" tabindex="-1">Траектория <span id="step-count">0</span></button></div>
+          <div id="panel-findings" role="tabpanel" aria-labelledby="tab-findings"><div class="list-header"><span>ТИП РАСХОЖДЕНИЯ</span><span>СУММА / ДОКАЗАТЕЛЬСТВА</span></div><div id="findings-list" class="findings-list"></div></div>
+          <div id="panel-trajectory" role="tabpanel" aria-labelledby="tab-trajectory" hidden><div class="trajectory-heading"><p>Каждый шаг — запрос к открытым данным.</p><button id="export-button" class="text-button" type="button">Скачать JSON <span aria-hidden="true">↗</span></button></div><ol id="trajectory-list" class="trajectory-list"></ol></div>
+          <div class="console-bottom"><span><i class="status-dot"></i>ТОЛЬКО СИНТЕТИЧЕСКИЕ ДАННЫЕ</span><span id="result-announcement" class="sr-only" role="status" aria-live="polite"></span><span>100 ШАГОВ MAX</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rail proof-section" aria-labelledby="proof-title">
+      <div class="proof-heading"><p class="eyebrow">// 02 — БЛИЖЕ К ЗАПИСЯМ</p><h2 id="proof-title">Ничего на веру.</h2><p class="lead">Откройте находку и пройдите от вывода к исходной записи.</p></div>
+      <div class="paper-board"><div class="paper-top"><span>GENESIS / AUDIT NOTE</span><span>DOCUMENT → LEDGER</span></div><div class="paper-head"><span class="paper-number">01</span><div><p id="proof-type">Проверка расхождения</p><h3 id="proof-amount">Каждая сумма объяснима.</h3></div><svg class="paper-stamp" viewBox="0 0 70 70" aria-hidden="true"><circle cx="35" cy="35" r="27"/><circle cx="35" cy="35" r="21"/><path d="m23 35 8 8 17-19"/></svg></div><div id="proof-records" class="proof-records"></div><div class="paper-bottom"><span>ПРОВЕРЯЙТЕ СВЯЗИ, А НЕ ПОДОЗРИТЕЛЬНЫЕ СУММЫ.</span><button id="proof-open" type="button">Открыть доказательства ↗</button></div></div>
+    </section>
+
+    <section class="rail process-section" id="method" aria-labelledby="method-title"><div class="process-copy"><p class="eyebrow">// 03 — ПРОЦЕСС</p><h2 id="method-title">История.<br>Расследование.<br>Обратная связь.</h2><p class="lead">Один эпизод — одна компания<br>и один отчётный период.</p><a href="#lab" class="key-secondary">Пройти эпизод <span aria-hidden="true">↗</span></a></div><ol class="process-steps"><li><span>01</span><div><h3>Создать историю</h3><p>Среда генерирует согласованные документы, затем вносит выбранные ошибки.</p></div></li><li><span>02</span><div><h3>Собрать свидетельства</h3><p>Агент запрашивает записи и сопоставляет счета, платежи, курсы и даты.</p></div></li><li><span>03</span><div><h3>Проверить выводы</h3><p>Оценщик сверяет находки с эталоном. Ложные тревоги и пропуски влияют на результат.</p></div></li></ol></section>
+
+    <section class="rail editorial" aria-labelledby="editorial-title"><p class="eyebrow">// СОЗДАНО ДЛЯ ИССЛЕДОВАНИЯ</p><h2 id="editorial-title">Хороший ответ можно проверить.</h2><p class="editorial-teaser" aria-hidden="true">Наша цель — среда, в которой агент учится задавать правильные вопросы к финансовым данным. Не угадывать подозрительные строки, а находить расхождения и показывать, откуда следует вывод. Контролируемая сложность делает результат понятным и воспроизводимым.</p><button class="key-secondary" type="button" id="about-button">О подходе к оценке <span aria-hidden="true">↗</span></button></section>
+    <section class="rail closing"><div><h2>Пусть цифры расскажут<br>проверяемую историю.</h2><p>Начните с одного эпизода.</p></div><a class="key" href="#lab"><span>Открыть среду <span aria-hidden="true">↗</span></span></a></section>
+  </main>
+  <footer class="footer rail"><span>Genesis · FinTech Environment</span><a href="https://github.com/larl9n/genesis-hackaton" target="_blank" rel="noopener noreferrer">Исходный код ↗</a><span>2026</span></footer>
+
+  <dialog id="evidence-dialog" aria-labelledby="evidence-title"><div class="dialog-heading"><p class="eyebrow">// ЦЕПОЧКА ДОКАЗАТЕЛЬСТВ</p><button class="close-button" id="close-evidence" type="button" aria-label="Закрыть доказательства">×</button></div><h2 id="evidence-title">Доказательства</h2><p id="evidence-summary" class="dialog-description"></p><div id="evidence-records" class="evidence-records"></div><p class="dialog-footnote">Здесь только записи, которые агент получил через инструменты. Скрытый эталон не отображается.</p></dialog>
+  <dialog id="about-dialog" aria-labelledby="about-title"><div class="dialog-heading"><p class="eyebrow">// ПРИНЦИП ОЦЕНКИ</p><button class="close-button" id="close-about" type="button" aria-label="Закрыть описание">×</button></div><h2 id="about-title">Хороший ответ можно проверить.</h2><p class="dialog-description">Genesis — синтетическая среда для исследования финансового аудита. Агент изучает документы и отправляет структурированные находки. Оценщик проверяет тип ошибки, затронутые записи, сумму, валюту и достаточность доказательств.</p><p class="dialog-description">F1 учитывает найденные ошибки, пропуски и ложные тревоги. За лишние действия предусмотрена небольшая стоимость. Повторные обвинения не дают дополнительных баллов.</p><p class="dialog-description">В этой демонстрации работают алгоритмы сверки, а не обученная нейросеть. Локальная веб-панель запускает доверенные политики; контейнерный режим оценки доступен отдельно через CLI.</p><a class="key-secondary" href="https://github.com/larl9n/genesis-hackaton" target="_blank" rel="noopener noreferrer">Читать документацию ↗</a></dialog>
+  <noscript><p class="noscript-message">Для интерактивной лаборатории включите JavaScript. Документация и команды запуска доступны в README проекта.</p></noscript>
+</body>
+</html>

@@ -16,6 +16,8 @@ def main() -> int:
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("info", help="Show implementation status as JSON")
     commands.add_parser("doctor", help="Check the required Python version")
+    web = commands.add_parser("serve", help="Start the local audit UI on loopback")
+    web.add_argument("--port", type=int, default=8765)
     generate = commands.add_parser("generate-clean", help="Generate and independently check a clean company")
     generate.add_argument("--seed", type=int, required=True)
     generate.add_argument("--output", required=True)
@@ -72,6 +74,10 @@ def main() -> int:
         from .generation.clean import CleanConfig, generate_clean
         from .generation.storage import load_public, read_json, write_clean
         try:
+            if args.command == "serve":
+                from .web.server import serve
+                serve(args.port)
+                return 0
             if args.command == "run-policy":
                 from .evaluation.external import run_external
                 from .generation.scenario import ScenarioConfig
@@ -134,7 +140,7 @@ def main() -> int:
                         "four_error_families", "fx_payment_history", "boundary_decoys", "interaction_scenarios",
                         "truth_validation", "reward_matching", "development_reset_step", "oracle_demo",
                         "observation_only_baselines", "baseline_benchmark", "development_failure_analysis",
-                        "bounded_worker_ipc", "external_policy_runner", "docker_worker_backend"],
+                        "bounded_worker_ipc", "external_policy_runner", "docker_worker_backend", "local_audit_ui"],
         "planned": ["train_dev_datasets", "submission_packaging"],
         "end_to_end_available": True,
         "security_mode": "development_in_process",
