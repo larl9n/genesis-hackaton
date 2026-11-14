@@ -66,6 +66,6 @@ Worker ограничен 1 CPU, 512 MiB RAM без дополнительног
 GENESIS_RUN_DOCKER_TESTS=1 PYTHONPATH=src python -m unittest discover -s tests -p test_container.py -v
 ```
 
-При явном включении отсутствие Docker/образа — ошибка, а не пропуск. Проверяются отсутствие файлов хоста и evaluator-кода, запрет записи в root, внешней сети, UID/capabilities/no-new-privileges, ограничения памяти/CPU/PID, полный эпизод и удаление зависшего контейнера. Отдельная job GitHub Actions собирает образ и запускает этот набор. Результат CI фиксируется в CHECKPOINTS после фактического выполнения; локальный Mac без Docker не подтверждает контейнерную изоляцию.
+При явном включении отсутствие Docker/образа — ошибка, а не пропуск. Проверяются отсутствие файлов хоста и evaluator-кода, запрет записи в root, внешней сети, UID/capabilities/no-new-privileges, ограничения памяти/CPU/PID, полный эпизод и удаление зависшего контейнера. Все 4 проверки прошли в [Linux CI 43570935768](https://github.com/larl9n/genesis-hackaton/actions/runs/43570935768) на коммите 42b10f6. Локальный Mac без Docker запускает только 142 обычных проверки; это различие сохраняется явно.
 
 Настройки основаны на [официальной документации Docker run](https://docs.docker.com/engine/containers/run/) и [справочнике параметров](https://docs.docker.com/reference/cli/docker/container/run/).

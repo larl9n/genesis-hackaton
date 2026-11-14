@@ -8,7 +8,7 @@
 
 **Версия 0.4.0: внешний worker и контейнерный backend.** Работают история с FX/возвратами/границами, четыре семейства ошибок и две композиции, независимая проверка, matching/reward, инструменты и политики. Добавлен JSON-line IPC с ограничениями размера/времени и отдельный процесс политики. Docker-backend по умолчанию ограничивает файлы, сеть и ресурсы и не переключается в небезопасный режим при ошибке. Контейнерная проверка выполняется отдельной job Linux CI; локальный режим development сам по себе OS-изоляцию не подтверждает. Train/dev-наборы и полный пакет сдачи — следующие этапы.
 
-Каркас опубликован в `main`; [первый CI-прогон на Python 3.11](https://github.com/larl9n/genesis-hackaton/actions/runs/43464208929) завершился успешно.
+Код опубликован в `main`; [CI версии 0.4.0](https://github.com/larl9n/genesis-hackaton/actions/runs/43570935768) прошёл: 142 обычные проверки и 4 реальные Linux/Docker-интеграции в отдельной job.
 
 [Исходное ТЗ](https://docs.google.com/document/d/13a2pVl5LVU6_MW_FWE4KvjX_s7e-UPJvcSJuYjvCWoA) — черновик организаторов от 12 ноября 2026 года. Его лимиты и правила пока рассматриваем как проектные ориентиры. Дедлайн команды — до 20 ноября; сдаваемую версию готовим к 19 ноября.
 
@@ -112,6 +112,15 @@ PYTHONPATH=src python -m genesis_fintech benchmark --output artifacts/baseline-e
 
 В проверенном прогоне reconciliation: TP=140, FP=0, FN=0; random F1=0, flag-all micro F1=0.0268. Это измерение на нашем синтетическом development-наборе в одном процессе. Oracle имеет привилегированный эталон; обучения модели и OS-изоляции здесь нет. Методика, ограничения и разбор ошибок — [BASELINES.md](docs/BASELINES.md).
 
+## Внешняя политика
+
+```bash
+docker build -f docker/worker.Dockerfile -t genesis-audit-worker:0.4.0 .
+PYTHONPATH=src python -m genesis_fintech run-policy --seed 42 --config configs/interactions.json --output artifacts/container-example
+```
+
+По умолчанию требуется Docker и заранее собранный образ. Без Docker для доверенного локального кода можно явно добавить `--backend development`; это отдельный процесс с тем же протоколом, но без ограничений доступа к хосту. Протокол, ресурсы и проверки — [ISOLATION.md](docs/ISOLATION.md).
+
 ## Структура
 
 ```text
@@ -157,7 +166,7 @@ python -m json.tool configs/default.json
 PYTHONPATH=src python -m unittest discover -s tests -v
 ```
 
-`make check PYTHON=python` и CI выполняют весь набор: CLI, функциональные тесты, компиляцию и пять JSON-конфигов. Проверены четыре семейства, их 16 комбинаций, две композиции, независимые ручные случаи FX/cutoff и полный development-эпизод. OS-изоляция пока не реализована и этими тестами не подтверждается.
+`make check PYTHON=python` проверяет CLI, предметную логику, IPC, компиляцию и пять JSON-конфигов: 142 теста проходят, 4 Docker-интеграции по умолчанию пропускаются. В Linux CI отдельная job явно включает и проходит все 4 Docker-теста. Проверены четыре семейства, 16 комбинаций, две композиции, ручные FX/cutoff и полный внешний эпизод. Это проверка выбранного контейнерного режима, не гарантия защиты от уязвимостей ядра или Docker.
 
 ## Лицензия
 

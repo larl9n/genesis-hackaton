@@ -6,7 +6,7 @@
 
 Полный CLI-прогон `run-policy --seed 42 --config configs/interactions.json --backend development`: TP4/FP0/FN0, 12 действий, reward0.978. Артефакты: `artifacts/checkpoint-external-worker-2026-11-14`. Это проверка IPC, не OS-изоляции.
 
-Реальные Docker-проверки добавлены отдельной Linux job: закрытые файлы/код, сеть, read-only root, UID/caps/no-new-privileges, CPU/RAM/PID, полный эпизод и удаление зависшего контейнера. Результат CI будет записан после выполнения. Протокол и доверенная база описаны в [ISOLATION.md](ISOLATION.md).
+Все 4 реальные Docker-проверки прошли в [Linux CI 43570935768](https://github.com/larl9n/genesis-hackaton/actions/runs/43570935768) на коммите 42b10f6: закрытые файлы/код, сеть, read-only root, UID/caps/no-new-privileges, CPU/RAM/PID, полный эпизод и удаление зависшего контейнера. Job 132374954780: `Ran 4 tests ... OK`; обычная job также success. Протокол и доверенная база описаны в [ISOLATION.md](ISOLATION.md).
 
 Обновлено: 14 ноября 2026 года. Локальное окружение: Python 3.11.18. Каждый этап проверялся до перехода к следующему.
 

@@ -1,6 +1,6 @@
 # Проверки
 
-Текущий набор — 118 тестов стандартного unittest без внешних runtime-зависимостей:
+Текущий набор — 142 обычных проверки и 4 Docker-интеграции стандартного unittest без внешних runtime-зависимостей:
 
 - `test_domain.py` — строгие схемы, неверные типы, время, суммы, Decimal и округление.
 - `test_clean.py` — воспроизводимость, размеры на 50 seed, чистая модель и независимый checker.
@@ -13,10 +13,13 @@
 - `test_fx_clean.py` — чистые FX-платежи, локальная дата курса, границы периода, разрядности и совместимость конфигов.
 - `test_full_scenarios.py` — четыре семейства, 16 комбинаций, два взаимодействия, ручные FX/cutoff-примеры, provenance, смена ID и до 12 ошибок.
 - `test_refunds.py` — корректные возвраты, обратные проводки, достаточность прошлых поступлений и явная версия схемы.
+- `test_baselines.py`, `test_benchmark.py` — независимые политики, сравнение и воспроизводимость отчётов/траекторий.
+- `test_external.py` — отдельный процесс, строгий IPC, лимиты, EOF/timeout/cleanup и отсутствие fallback.
+- `test_container.py` — 4 настоящие Docker-интеграции; отдельная Linux job включает их через GENESIS_RUN_DOCKER_TESTS=1. По умолчанию они пропущены.
 - `fixtures/clean_minimal.json` — вручную составленный пример с двумя частичными платежами и остатком 4000 minor units. Он не создан генератором и нужен для независимой проверки.
 
 ```bash
 make check PYTHON=.venv/bin/python
 ```
 
-Матрица последующих этапов: [docs/VALIDATION.md](../docs/VALIDATION.md). Проверены development-контракт, четыре семейства и две композиции; OS-изоляция пока не реализована и не подтверждена этими тестами.
+Матрица: [VALIDATION.md](../docs/VALIDATION.md). Docker-набор прошёл в [CI](https://github.com/larl9n/genesis-hackaton/actions/runs/43570935768); условия и границы — [ISOLATION.md](../docs/ISOLATION.md). Development subprocess и in-process benchmark не являются защищёнными режимами.
